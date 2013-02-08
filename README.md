@@ -7,20 +7,18 @@ WWW-Naver-SearchAd is a tool for auto bidding at http://searchad.naver.com
 
 2. use it!
 
-```perl
-use WWW:Naver::SearchAd;
-my $ad = WWW:Naver::SearchAd->new;
-die $ad->{error} unless $ad->signin('username', '99fc288bed...');
-
-my $bundle_id = '11111';
-my $rank      = 11;
-
-### rank
-### 1  .. 10 : Pow1 .. Pow10
-### 11 .. 15 : Biz1 .. Biz5
-
-die $ad->{error} unless $ad->refresh($bundle_id, $rank);
-```
+        use WWW:Naver::SearchAd;
+        my $ad = WWW:Naver::SearchAd->new;
+        die $ad->{error} unless $ad->signin('username', '99fc288bed...');
+        
+        my $bundle_id = '11111';
+        my $rank      = 11;
+        
+        ### rank
+        ### 1  .. 10 : Pow1 .. Pow10
+        ### 11 .. 15 : Biz1 .. Biz5
+        
+        die $ad->{error} unless $ad->refresh($bundle_id, $rank);
 
 3. need debugging?
 
