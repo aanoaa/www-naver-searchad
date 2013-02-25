@@ -79,6 +79,35 @@ sub signin {
     return $res->code;
 }
 
+sub get_bundles {
+    my $self = shift;
+
+    my $ua = $self->{agent};
+    my $res = $ua->request(GET "http://$HOST/AMCC30/AMCC3001_A01.nbp");
+
+    if (!$res->is_success) {
+        $self->{error} = $res->status_line;
+        return;
+    }
+
+    my $body = $res->content;
+    my ($json) = $body =~ m/bundleList: (.*?),?\r\n/s;
+
+    unless ($json) {
+        $self->{error} = "Couldn't find bundleList";
+        return;
+    }
+
+    my $data = try {
+        decode_json($json);
+    } catch {
+        $self->{error} = "failed to decode_json: $_";
+        return;
+    };
+
+    return $data;
+}
+
 sub refresh {
     my ($self, $bundle_id, $rank) = @_;
 
