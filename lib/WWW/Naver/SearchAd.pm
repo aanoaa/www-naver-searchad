@@ -91,7 +91,7 @@ sub get_bundles {
     }
 
     my $body = $res->content;
-    my ($json) = $body =~ m/bundleList: (.*?),?\r\n/s;
+    my ($json) = $body =~ m/bundleList: (.*?),?\r?\n/s;
 
     unless ($json) {
         $self->{error} = "Couldn't find bundleList";
