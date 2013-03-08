@@ -109,7 +109,7 @@ sub get_bundles {
 }
 
 sub refresh {
-    my ($self, $bundle_id, $rank) = @_;
+    my ($self, $bundle_id, $rank, $limit) = @_;
 
     delete $self->{error};
     if (!$bundle_id || !$rank) {
@@ -120,7 +120,7 @@ sub refresh {
     my $data = $self->_get_bundle_data($bundle_id);
     return if $self->{error};
 
-    my $params = $self->_set_prices_by_rank($data, $rank);
+    my $params = $self->_set_prices_by_rank($data, $rank, $limit);
     return if $self->{error};
 
     $self->_apply_prices($params);
@@ -161,7 +161,7 @@ sub _get_bundle_data {
 }
 
 sub _set_prices_by_rank {
-    my ($self, $decoded_data, $rank) = @_;
+    my ($self, $decoded_data, $rank, $limit) = @_;
 
     my %params;
     my $i = 0;
@@ -176,7 +176,7 @@ sub _set_prices_by_rank {
     my $res = $ua->request(
         POST "http://$HOST/AMCC23/AMCC2302_A04.json",
         [
-            bidAmt => '100000',
+            bidAmt => $limit || '100000',
             rank   => $rank,
             %params,
         ]
