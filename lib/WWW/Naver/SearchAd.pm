@@ -253,7 +253,7 @@ WWW::Naver::SearchAd - bidding(?) for http://searchad.naver.com
     $ node salogin.js `password`    # requires node
     # 99fc288bed... is used as a password for signin
 
-    use WWW:Naver::SearchAd;
+    use WWW::Naver::SearchAd;
     my $ad = WWW:Naver::SearchAd->new;
     die $ad->{error} unless $ad->signin('username', '99fc288bed...');
 
