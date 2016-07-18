@@ -74,7 +74,7 @@ __PACKAGE__->table("rank");
 
   data_type: 'text'
   default_value: null
-  inflate_datetime: 'epoch'
+  inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
@@ -82,7 +82,7 @@ __PACKAGE__->table("rank");
 
   data_type: 'text'
   default_value: null
-  inflate_datetime: 'epoch'
+  inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
   set_on_update: 1
@@ -108,7 +108,7 @@ __PACKAGE__->add_columns(
   {
     data_type        => "text",
     default_value    => \"null",
-    inflate_datetime => "epoch",
+    inflate_datetime => 1,
     is_nullable      => 1,
     set_on_create    => 1,
   },
@@ -116,7 +116,7 @@ __PACKAGE__->add_columns(
   {
     data_type        => "text",
     default_value    => \"null",
-    inflate_datetime => "epoch",
+    inflate_datetime => 1,
     is_nullable      => 1,
     set_on_create    => 1,
     set_on_update    => 1,
@@ -158,8 +158,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 01:42:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dZq4zuzCSIkcPtoYNC5wAQ
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LQYnjYSXg/AWxkYGt6Ghpg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

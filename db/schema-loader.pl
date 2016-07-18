@@ -1,7 +1,10 @@
 {
     schema_class => "SearchAd::Schema",
-    connect_info =>
-        { dsn => "dbi:SQLite:db/searchad.db", on_connect_do => 'PRAGMA foreign_keys = ON', sqlite_unicode => 1, },
+    connect_info => {
+        dsn            => "dbi:SQLite:db/searchad.db",
+        on_connect_do  => 'PRAGMA foreign_keys = ON',
+        sqlite_unicode => 1,
+    },
     loader_options => {
         dump_directory            => 'lib',
         naming                    => { ALL => 'v8' },
@@ -15,10 +18,19 @@
         custom_column_info        => sub {
             my ( $table, $column_name, $column_info ) = @_;
             if ( $column_name eq 'create_date' ) {
-                return { %$column_info, set_on_create => 1, inflate_datetime => 'epoch', };
+                return {
+                    %$column_info,
+                    set_on_create    => 1,
+                    inflate_datetime => 1,
+                };
             }
             elsif ( $column_name eq 'update_date' ) {
-                return { %$column_info, set_on_create => 1, set_on_update => 1, inflate_datetime => 'epoch', };
+                return {
+                    %$column_info,
+                    set_on_create    => 1,
+                    set_on_update    => 1,
+                    inflate_datetime => 1,
+                };
             }
         },
     },

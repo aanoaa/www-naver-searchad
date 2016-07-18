@@ -5,8 +5,8 @@ CREATE TABLE user (
     username    TEXT NOT NULL,
     password    TEXT NOT NULL,
     email       TEXT NOT NULL,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL,
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL,
     UNIQUE (email)
 );
 
@@ -29,16 +29,16 @@ CREATE TABLE profile (
     customer_id TEXT DEFAULT NULL,
     api_key     TEXT DEFAULT NULL,
     api_secret  TEXT DEFAULT NULL,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE campaign (
     id          INTEGER PRIMARY KEY,
     str_id      TEXT NOT NULL,
     name        TEXT NOT NULL,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE adgroup (
@@ -46,15 +46,15 @@ CREATE TABLE adgroup (
     campaign_id INTEGER REFERENCES campaign(id) ON DELETE CASCADE ON UPDATE CASCADE,
     str_id      TEXT NOT NULL,
     name        TEXT NOT NULL,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE target (
     id          INTEGER PRIMARY KEY,
     url         TEXT NOT NULL,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE adkeyword (
@@ -65,8 +65,8 @@ CREATE TABLE adkeyword (
     name        TEXT NOT NULL,
     bid_amt     INTEGER DEFAULT 0,
     on_off      INTEGER DEFAULT 0,
-    create_date INTEGER DEFAULT NULL,
-    update_date INTEGER DEFAULT NULL
+    create_date TEXT DEFAULT NULL,
+    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE group_keyword (

@@ -70,17 +70,17 @@ __PACKAGE__->table("adkeyword");
 
 =head2 create_date
 
-  data_type: 'integer'
+  data_type: 'text'
   default_value: null
-  inflate_datetime: 'epoch'
+  inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
 =head2 update_date
 
-  data_type: 'integer'
+  data_type: 'text'
   default_value: null
-  inflate_datetime: 'epoch'
+  inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
   set_on_update: 1
@@ -104,17 +104,17 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => 0, is_nullable => 1 },
   "create_date",
   {
-    data_type        => "integer",
+    data_type        => "text",
     default_value    => \"null",
-    inflate_datetime => "epoch",
+    inflate_datetime => 1,
     is_nullable      => 1,
     set_on_create    => 1,
   },
   "update_date",
   {
-    data_type        => "integer",
+    data_type        => "text",
     default_value    => \"null",
-    inflate_datetime => "epoch",
+    inflate_datetime => 1,
     is_nullable      => 1,
     set_on_create    => 1,
     set_on_update    => 1,
@@ -216,8 +216,8 @@ Composing rels: L</group_keywords> -> adgroup
 __PACKAGE__->many_to_many("adgroups", "group_keywords", "adgroup");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 01:42:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RFdjcntSknqvlchfoLWu6A
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JNpGXLEJ14wFquPOxwpiUQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
