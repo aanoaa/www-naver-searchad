@@ -19,3 +19,4 @@ run
 node_modules/
 public/assets/components/
 searchad.conf
+*.db
