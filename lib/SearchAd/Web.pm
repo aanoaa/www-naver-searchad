@@ -1,13 +1,13 @@
 package SearchAd::Web;
 use Mojo::Base 'Mojolicious';
 
+use Email::Valid ();
 use SearchAd::Schema;
 
 use version; our $VERSION = qv("v0.0.1");
 
 has schema => sub {
-    return SearchAd::Schema->connect(
-        { dsn => "dbi:SQLite:db/searchad.db", quote_char => q{`}, sqlite_unicode => 1, } );
+    return SearchAd::Schema->connect( { dsn => "dbi:SQLite:db/searchad.db", quote_char => q{`}, sqlite_unicode => 1, } );
 };
 
 =head1 METHODS
@@ -31,6 +31,7 @@ sub startup {
     $self->_assets;
     $self->_public_routes;
     $self->_private_routes;
+    $self->_extend_validator;
 }
 
 sub _assets {
@@ -44,11 +45,29 @@ sub _public_routes {
     my $r    = $self->routes;
 
     $r->get('/')->to('root#index');
+    $r->get('/signin')->to('user#add');
+    $r->post('/signin')->to('user#create');
+    $r->get('/login')->to('user#login_form');
+    $r->post('/login')->to('user#login');
 }
 
 sub _private_routes {
     my $self = shift;
-    my $r    = $self->routes;
+    my $root = $self->routes;
+
+    my $r = $root->under('/')->to('user#auth');
+    $r->get('/logout')->to('user#logout')->name('logout');
+}
+
+sub _extend_validator {
+    my $self = shift;
+
+    $self->validator->add_check(
+        email => sub {
+            my ( $v, $name, $value ) = @_;
+            return not Email::Valid->address($value);
+        }
+    );
 }
 
 1;
