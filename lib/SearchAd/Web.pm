@@ -1,7 +1,14 @@
 package SearchAd::Web;
 use Mojo::Base 'Mojolicious';
 
+use SearchAd::Schema;
+
 use version; our $VERSION = qv("v0.0.1");
+
+has schema => sub {
+    return SearchAd::Schema->connect(
+        { dsn => "dbi:SQLite:db/searchad.db", quote_char => q{`}, sqlite_unicode => 1, } );
+};
 
 =head1 METHODS
 
@@ -36,7 +43,7 @@ sub _public_routes {
     my $self = shift;
     my $r    = $self->routes;
 
-    $r->get('/')->to('example#welcome');
+    $r->get('/')->to('root#index');
 }
 
 sub _private_routes {
