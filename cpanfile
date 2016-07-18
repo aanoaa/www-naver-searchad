@@ -1,4 +1,5 @@
 requires 'Digest::SHA';
+requires 'Email::Valid';
 requires 'Encode';
 requires 'Getopt::Long';
 requires 'HTTP::Tiny';
