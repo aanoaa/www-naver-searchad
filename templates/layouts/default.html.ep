@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SearchAd &middot; <%= title %></title>
+    <title><%= title %> &middot; SearchAd</title>
     <link rel="stylesheet" href="/assets/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/components/font-awesome/css/font-awesome.min.css">
     % for my $css (@$csses) {
@@ -26,15 +26,17 @@
           <a class="navbar-brand" href="<%= url_for('/') %>">Naver 키워드광고 자동입찰</a>
         </div>
 
+        <!--
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a href="<%= url_for('/login') %>">
-                로그인
+                login
               </a>
             </li>
           </ul>
-        </div><!-- /.navbar-collapse -->
+        </div>
+        --><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
 
