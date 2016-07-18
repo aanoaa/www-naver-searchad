@@ -1,275 +1,211 @@
 package WWW::Naver::SearchAd;
+
 # ABSTRACT: bidding(?) for http://searchad.naver.com
 
-use LWP::UserAgent;
-use HTTP::Cookies;
-use HTTP::Request;
-use HTTP::Request::Common;
+use Moo;
 
-use JSON::XS;
-use Try::Tiny;
+use Digest::SHA qw(hmac_sha256_base64);
+use HTTP::Tiny;
+use Time::HiRes qw(gettimeofday);
+use JSON qw/encode_json/;
 
-my $HOST    = 'searchad.naver.com';
-my $REFERER = "http://$HOST";
+our $BASE_URL = 'https://api.naver.com';
 
-sub new {
-    my ($class, $args) = @_;
+has key         => ( is => 'ro', required => 1 );
+has secret      => ( is => 'ro', required => 1 );
+has customer_id => ( is => 'ro', required => 1 );
+has http        => (
+    is      => 'lazy',
+    default => sub {
+        my $self = shift;
+        return HTTP::Tiny->new( default_headers => { 'X-API-KEY' => $self->key, 'X-Customer' => $self->customer_id } );
+    }
+);
 
-    my $ua = LWP::UserAgent->new(
-        agent => $args->{agent} || 'Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 Firefox/10.0.11 Iceweasel/10.0.11'
-    );
+=head1 METHODS
 
-    push @{ $ua->requests_redirectable }, 'POST';
-    $ua->cookie_jar(HTTP::Cookies->new);
-    $ua->add_handler(
-        'request_prepare' => sub {
-            my ($req, $ua, $h) = @_;
-            print $req->as_string, "\n" if $ENV{DEBUG};
-        }
-    );
+=head2 request
 
-    $ua->add_handler(
-        'response_done' => sub {
-            my ($res, $ua, $h) = @_;
-            print $res->as_string, "\n" if $ENV{DEBUG};
-        }
-    );
+    my $res = $api->request($method, $path, $params?, $opts?);
 
-    return bless {
-        agent => $ua
-    }, $class;
+=cut
+
+sub request {
+    my ( $self, $method, $path, $params, $opts ) = @_;
+
+    my $url = $BASE_URL . $path;
+    $url .= "?$params" if $params;
+    print STDERR "--> Working on $method $url ... ";
+
+    my $custom_headers = $self->custom_headers( $method, $path );
+    if ($opts) {
+        map { $opts->{headers}{$_} = $custom_headers->{$_} } keys %$custom_headers;
+    }
+    else {
+        $opts = { headers => $custom_headers };
+    }
+
+    my $res = $self->http->request( $method, $url, $opts );
+
+    unless ( $res->{success} ) {
+        print STDERR "Failed\n";
+        print STDERR "! $res->{reason}\n";
+        print STDERR "! $res->{content}\n";
+        return;
+    }
+
+    print STDERR "OK\n";
+    return $res;
 }
 
-sub signin {
-    my ($self, $username, $password) = @_;
+=head2 campagins
 
-    delete $self->{error};
-    if (!$username || !$password) {
-        $self->{error} = 'signin failed: no username or password';
-        return;
-    }
+    GET /ncc/campaigns{?baseSearchId,recordSize,selector}
+    my $json = $api->campaigns(%attr);
 
-    my $ua  = $self->{agent};
-    my $res = $ua->request(
-        POST "https://$HOST/Login/login.json",
-        Referer => $REFERER,
-        Content => [
-            loginId  => $username,
-            loginPwd => $password
-        ]
-    );
+=cut
 
-    if (!$res->is_success) {
-        $self->{error} = $res->status_line;
-        return;
-    }
+sub campaigns {
+    my ( $self, $attr ) = @_;
 
-    my $data = try {
-        decode_json($res->content);
-    } catch {
-        $self->{error} = "failed to decode_json: $_";
-        return;
-    };
-
-    if ($data->{retCode} != 0) {
-        $self->{error} = $data->{retMsg};
-        return;
-    }
-
-    return $res->code;
+    ## TODO: $attr
+    my $res = $self->request( 'GET', '/ncc/campaigns' );
+    return unless $res;
+    return $res->{content};
 }
 
-sub get_bundles {
-    my $self = shift;
+=head2 adgroups($campaignId)
 
-    my $ua = $self->{agent};
-    my $res = $ua->request(GET "http://$HOST/AMCC30/AMCC3001_A01.nbp");
+    GET /ncc/adgroups{?nccCampaignId,baseSearchId,recordSize,selector}
+    my $json = $api->adgroups($ids);
 
-    if (!$res->is_success) {
-        $self->{error} = $res->status_line;
-        return;
-    }
+=cut
 
-    my $body = $res->content;
-    my ($json) = $body =~ m/bundleList: (.*?),?\r?\n/s;
+sub adgroups {
+    my ( $self, $campaignId ) = @_;
 
-    unless ($json) {
-        $self->{error} = "Couldn't find bundleList";
-        return;
-    }
+    return unless $campaignId;
 
-    my $data = try {
-        decode_json($json);
-    } catch {
-        $self->{error} = "failed to decode_json: $_";
-        return;
-    };
-
-    return $data;
+    my $params = $self->http->www_form_urlencode( { nccCampaignId => $campaignId } );
+    my $res = $self->request( 'GET', '/ncc/adgroups', $params );
+    return unless $res;
+    return $res->{content};
 }
 
-sub refresh {
-    my ($self, $bundle_id, $rank, $limit) = @_;
+=head2 keywords($ids)
 
-    delete $self->{error};
-    if (!$bundle_id || !$rank) {
-        $self->{error} = "wrong arguments";
-        return;
-    }
+    GET /ncc/keywords{?nccAdgroupId,baseSearchId,recordSize,selector}
+    my $json = $api->keywords($ids);
 
-    my $data = $self->_get_bundle_data($bundle_id);
-    return if $self->{error};
+=cut
 
-    my $params = $self->_set_prices_by_rank($data, $rank, $limit);
-    return if $self->{error};
+sub keywords {
+    my ( $self, $adgroupId ) = @_;
 
-    $self->_apply_prices($params);
-    return if $self->{error};
+    return unless $adgroupId;
 
-    return 1;
+    my $params = $self->http->www_form_urlencode( { nccAdgroupId => $adgroupId } );
+    my $res = $self->request( 'GET', '/ncc/keywords', $params );
+    return unless $res;
+    return $res->{content};
 }
 
-sub _get_bundle_data {
-    my ($self, $bundle_id) = @_;
+=head2 keyword($keywordId)
 
-    my $ua = $self->{agent};
-    my $res = $ua->request(
-        POST "http://$HOST/AMCC30/AMCC3001_A02.json",
-        [
-            bundleId => $bundle_id
-        ]
-    );
+    GET /ncc/keywords/{nccKeywordId}
+    my $json = $api->keyword($keywordId);
 
-    if (!$res->is_success) {
-        $self->{error} = $res->status_line;
-        return;
-    }
+=cut
 
-    my $data = try {
-        decode_json($res->content);
-    } catch {
-        $self->{error} = "failed to decode_json: $_";
-        return;
-    };
+sub keyword {
+    my ( $self, $keywordId ) = @_;
 
-    if ($data->{retCode} != 0) {
-        $self->{error} = $data->{retMsg};
-        return;
-    }
+    return unless $keywordId;
 
-    return $data;
+    my $res = $self->request( 'GET', "/ncc/keywords/$keywordId" );
+    return unless $res;
+    return $res->{content};
 }
 
-sub _set_prices_by_rank {
-    my ($self, $decoded_data, $rank, $limit) = @_;
+=head2 update_keyword($bidAmt, $useGroupBidAmt, $adgroupId)
 
-    my %params;
-    my $i = 0;
-    for my $item (@{ $decoded_data->{cpcReqList} }) {
-        $params{"cpcReqList[$i][rowId]"} = 'r' . (0 + $i);
-        map { $params{"cpcReqList[$i][$_]"} = $item->{$_} } qw/urlId cpcGroupId cpcReqId keywordId keyword restrictType bidAmt isNxRestricted/;
+    PUT /ncc/keywords/{nccKeywordId}{?fields}
+    my $json = $api->update_keyword(550, 'false', 'grp-m001-01-0000000000001');
 
-        $i++;
-    }
+=cut
 
-    my $ua  = $self->{agent};
-    my $res = $ua->request(
-        POST "http://$HOST/AMCC23/AMCC2302_A04.json",
-        [
-            bidAmt => $limit || '100000',
-            rank   => $rank,
-            %params,
-        ]
-    );
+sub update_keyword {
+    my ( $self, $keywordId, $bidAmt, $useGroupBidAmt, $adgroupId ) = @_;
 
-    if (!$res->is_success) {
-        $self->{error} = $res->status_line;
-        return;
-    }
+    return unless $keywordId;
+    return unless $bidAmt;
+    return unless $useGroupBidAmt;
 
-    my $data = try {
-        decode_json($res->content);
-    } catch {
-        $self->{error} = "failed to decode_json: $_";
-        return;
-    };
-
-    if ($data->{retCode} != 0) {
-        $self->{error} = $data->{retMsg};
-        return;
-    }
-
-    $i = 0;
-    for my $item (@{ $data->{rankCpcList} }) {
-        $params{"cpcReqList[$i][bidAmt]"} = $item->{bidAmt};
-        delete $params{"cpcReqList[$i][isNxRestricted]"};
-
-        $i++;
-    }
-
-    return \%params;
+    my $params = $self->http->www_form_urlencode( { fields => 'bidAmt' } );
+    my $body = { bidAmt => $bidAmt, useGroupBidAmt => $useGroupBidAmt, nccAdgroupId => $adgroupId };
+    my $opts = { headers => { 'content-type' => 'application/json' }, content => encode_json($body) };
+    my $res = $self->request( 'PUT', "/ncc/keywords/$keywordId", $params, $opts );
+    return unless $res;
+    return $res->{content};
 }
 
-sub _apply_prices {
-    my ($self, $params) = @_;
+=head2 managedKeyword
 
-    my $ua  = $self->{agent};
-    my $res = $ua->request(
-        POST "http://$HOST/AMCC30/AMCC3001_A09.json",
-        Referer => $REFERER,
-        Content => [ %$params ]
-    );
+    GET /ncc/managedKeyword{?keywords}
+    my $json = $api->managedKeyword($keyword);
 
-    if (!$res->is_success) {
-        $self->{error} = $res->status_line;
-        return;
+=cut
+
+sub managedKeyword {
+    my ( $self, $keyword ) = @_;
+
+    return unless $keyword;
+
+    my $params = $self->http->www_form_urlencode( { keywords => $keyword } );
+    my $res = $self->request( 'GET', '/ncc/managedKeyword', $params );
+    return unless $res;
+    return $res->{content};
+}
+
+=head2 custom_headers
+
+=cut
+
+sub custom_headers {
+    my ( $self, $method, $path ) = @_;
+    my $epoch = int( gettimeofday * 1000 );
+    my $signature = $self->signature( $epoch, $method, $path );
+
+    return { 'X-Timestamp' => $epoch, 'X-Signature' => $signature };
+}
+
+=head2 signature
+
+=cut
+
+sub signature {
+    my ( $self, $epoch, $method, $path ) = @_;
+
+    my $secret = $self->secret;
+    my $data   = "$epoch.$method.$path";
+    my $digest = hmac_sha256_base64( $data, $secret );
+    while ( length($digest) % 4 ) {
+        $digest .= '=';
     }
 
-    my $data = try {
-        decode_json($res->content);
-    } catch {
-        $self->{error} = "failed to decode_json: $_";
-        return;
-    };
-
-    if ($data->{retCode} != 0) {
-        $self->{error} = $data->{retMsg};
-        return;
-    }
-
-    return $res->code;
+    return $digest;
 }
 
 1;
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 WWW::Naver::SearchAd - bidding(?) for http://searchad.naver.com
 
 =head1 SYNOPSIS
-
-    $ node salogin.js `password`    # requires node
-    # 99fc288bed... is used as a password for signin
-
-    use WWW::Naver::SearchAd;
-    my $ad = WWW:Naver::SearchAd->new;
-    die $ad->{error} unless $ad->signin('username', '99fc288bed...');
-
-    my $bundle_id = '11111';
-
-    my $rank      = 11
-    # 1  .. 10 : Power1 .. Power10
-    # 11 .. 15 : Biz1 .. Biz5
-
-    die $ad->{error} unless $ad->refresh($bundle_id, $rank);
-
-
-    $ export DEBUG=1    # for debugging HTTP Messages
-
-=head1 DESCRIPTION
-
-no description yet.
 
 =cut
