@@ -1,0 +1,5 @@
+% layout 'default';
+% title 'Unauthorized';
+
+<h2>401 Unauthorized</h2>
+<p><%= $error %></p>
