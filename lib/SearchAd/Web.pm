@@ -44,11 +44,12 @@ sub _public_routes {
     my $self = shift;
     my $r    = $self->routes;
 
-    $r->get('/')->to('root#index');
+    $r->get('/welcome')->to('root#welcome');
     $r->get('/signin')->to('user#add');
     $r->post('/signin')->to('user#create');
     $r->get('/login')->to('user#login_form');
     $r->post('/login')->to('user#login');
+    $r->get('/logout')->to('user#logout');
 }
 
 sub _private_routes {
@@ -56,7 +57,9 @@ sub _private_routes {
     my $root = $self->routes;
 
     my $r = $root->under('/')->to('user#auth');
-    $r->get('/logout')->to('user#logout')->name('logout');
+    $r->get('/')->to('root#index');
+    $r->get('/profile')->to('user#profile');
+    $r->post('/profile')->to('user#update_profile');
 }
 
 sub _extend_validator {
