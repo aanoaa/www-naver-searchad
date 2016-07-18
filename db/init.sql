@@ -26,6 +26,7 @@ CREATE TABLE user_role (
 
 CREATE TABLE profile (
     id          INTEGER PRIMARY KEY,
+    user_id     INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
     customer_id TEXT DEFAULT NULL,
     api_key     TEXT DEFAULT NULL,
     api_secret  TEXT DEFAULT NULL,

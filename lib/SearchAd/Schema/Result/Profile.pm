@@ -34,6 +34,12 @@ __PACKAGE__->table("profile");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 user_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 customer_id
 
   data_type: 'text'
@@ -74,6 +80,8 @@ __PACKAGE__->table("profile");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "customer_id",
   { data_type => "text", default_value => \"null", is_nullable => 1 },
   "api_key",
@@ -111,9 +119,31 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SPe2xdXKwmmXTARtttscfw
+=head2 user
+
+Type: belongs_to
+
+Related object: L<SearchAd::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "user",
+  "SearchAd::Schema::Result::User",
+  { id => "user_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:30:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dxZY+9T5II/BD32ZeFGW+w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
