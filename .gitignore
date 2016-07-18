@@ -16,3 +16,5 @@ nytprof.out
 pm_to_blib
 t/
 run
+node_modules/
+public/assets/components/
