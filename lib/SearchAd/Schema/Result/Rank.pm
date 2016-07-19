@@ -127,9 +127,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:49:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BiETgWio8Ho25pv1TPdxWQ
+=head2 adkeywords
+
+Type: has_many
+
+Related object: L<SearchAd::Schema::Result::Adkeyword>
+
+=cut
+
+__PACKAGE__->has_many(
+  "adkeywords",
+  "SearchAd::Schema::Result::Adkeyword",
+  { "foreign.rank_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:57:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:endr0y3imUoJkvvKS1Q2+w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

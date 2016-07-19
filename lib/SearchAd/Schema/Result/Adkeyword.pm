@@ -155,32 +155,17 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 adkeywords
-
-Type: has_many
-
-Related object: L<SearchAd::Schema::Result::Adkeyword>
-
-=cut
-
-__PACKAGE__->has_many(
-  "adkeywords",
-  "SearchAd::Schema::Result::Adkeyword",
-  { "foreign.rank_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 rank
 
 Type: belongs_to
 
-Related object: L<SearchAd::Schema::Result::Adkeyword>
+Related object: L<SearchAd::Schema::Result::Rank>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "rank",
-  "SearchAd::Schema::Result::Adkeyword",
+  "SearchAd::Schema::Result::Rank",
   { id => "rank_id" },
   {
     is_deferrable => 0,
@@ -191,8 +176,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:49:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:22p9ThB1xFYBNg3xIDadhQ
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:57:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vh+D04+rTU+bNJYvmEsoyw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -68,8 +68,8 @@ CREATE TABLE rank (
 
 CREATE TABLE adkeyword (
     id          INTEGER PRIMARY KEY,
-    adgroup_id  INTEGER REFERENCES adgroup(id)   ON DELETE CASCADE ON UPDATE CASCADE,
-    rank_id     INTEGER REFERENCES adkeyword(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    adgroup_id  INTEGER REFERENCES adgroup(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    rank_id     INTEGER REFERENCES rank(id)    ON DELETE CASCADE ON UPDATE CASCADE,
     str_id      TEXT NOT NULL,
     name        TEXT NOT NULL,
     bid_amt     INTEGER DEFAULT 0,

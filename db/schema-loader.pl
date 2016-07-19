@@ -8,7 +8,6 @@
     loader_options => {
         dump_directory            => 'lib',
         naming                    => { ALL => 'v8' },
-        rel_name_map              => { adkeywords_2s => 'adkeywordss' },
         skip_load_external        => 1,
         relationships             => 1,
         col_collision_map         => 'column_%s',
