@@ -40,6 +40,12 @@ __PACKAGE__->table("adgroup");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 target_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 str_id
 
   data_type: 'text'
@@ -73,6 +79,8 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "campaign_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "target_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "str_id",
   { data_type => "text", is_nullable => 0 },
@@ -111,7 +119,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 adkeywordss
+=head2 adkeywords
 
 Type: has_many
 
@@ -120,7 +128,7 @@ Related object: L<SearchAd::Schema::Result::Adkeyword>
 =cut
 
 __PACKAGE__->has_many(
-  "adkeywordss",
+  "adkeywords",
   "SearchAd::Schema::Result::Adkeyword",
   { "foreign.adgroup_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
@@ -146,34 +154,29 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 group_keywords
+=head2 target
 
-Type: has_many
+Type: belongs_to
 
-Related object: L<SearchAd::Schema::Result::GroupKeyword>
+Related object: L<SearchAd::Schema::Result::Target>
 
 =cut
 
-__PACKAGE__->has_many(
-  "group_keywords",
-  "SearchAd::Schema::Result::GroupKeyword",
-  { "foreign.adgroup_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+__PACKAGE__->belongs_to(
+  "target",
+  "SearchAd::Schema::Result::Target",
+  { id => "target_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
-=head2 adkeywords
 
-Type: many_to_many
-
-Composing rels: L</group_keywords> -> adkeyword
-
-=cut
-
-__PACKAGE__->many_to_many("adkeywords", "group_keywords", "adkeyword");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N823hjqFXC0/EAlVlld4wQ
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:49:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4XJa+6lyWpEik0J+lg9QeQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -96,24 +96,24 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 adkeywords
+=head2 adgroups
 
 Type: has_many
 
-Related object: L<SearchAd::Schema::Result::Adkeyword>
+Related object: L<SearchAd::Schema::Result::Adgroup>
 
 =cut
 
 __PACKAGE__->has_many(
-  "adkeywords",
-  "SearchAd::Schema::Result::Adkeyword",
+  "adgroups",
+  "SearchAd::Schema::Result::Adgroup",
   { "foreign.target_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:USvzH/iv5YyvP5RafFmRUQ
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:23:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mcbyNixDJlf+Hb8Dj7zgQA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

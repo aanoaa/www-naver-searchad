@@ -40,7 +40,7 @@ __PACKAGE__->table("adkeyword");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 target_id
+=head2 rank_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -92,7 +92,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "adgroup_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "target_id",
+  "rank_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "str_id",
   { data_type => "text", is_nullable => 0 },
@@ -155,48 +155,33 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 group_keywords
+=head2 adkeywords
 
 Type: has_many
 
-Related object: L<SearchAd::Schema::Result::GroupKeyword>
+Related object: L<SearchAd::Schema::Result::Adkeyword>
 
 =cut
 
 __PACKAGE__->has_many(
-  "group_keywords",
-  "SearchAd::Schema::Result::GroupKeyword",
-  { "foreign.adkeyword_id" => "self.id" },
+  "adkeywords",
+  "SearchAd::Schema::Result::Adkeyword",
+  { "foreign.rank_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 ranks
-
-Type: has_many
-
-Related object: L<SearchAd::Schema::Result::Rank>
-
-=cut
-
-__PACKAGE__->has_many(
-  "ranks",
-  "SearchAd::Schema::Result::Rank",
-  { "foreign.adkeyword_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 target
+=head2 rank
 
 Type: belongs_to
 
-Related object: L<SearchAd::Schema::Result::Target>
+Related object: L<SearchAd::Schema::Result::Adkeyword>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "target",
-  "SearchAd::Schema::Result::Target",
-  { id => "target_id" },
+  "rank",
+  "SearchAd::Schema::Result::Adkeyword",
+  { id => "rank_id" },
   {
     is_deferrable => 0,
     join_type     => "LEFT",
@@ -205,19 +190,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 adgroups
 
-Type: many_to_many
-
-Composing rels: L</group_keywords> -> adgroup
-
-=cut
-
-__PACKAGE__->many_to_many("adgroups", "group_keywords", "adgroup");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JNpGXLEJ14wFquPOxwpiUQ
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:49:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:22p9ThB1xFYBNg3xIDadhQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
