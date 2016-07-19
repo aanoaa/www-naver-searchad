@@ -31,6 +31,7 @@ CREATE TABLE user_role (
 
 CREATE TABLE campaign (
     id          INTEGER PRIMARY KEY,
+    user_id     INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
     str_id      TEXT NOT NULL,
     name        TEXT NOT NULL,
     create_date TEXT DEFAULT NULL,

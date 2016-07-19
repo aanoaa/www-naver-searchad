@@ -148,6 +148,21 @@ __PACKAGE__->add_unique_constraint("email_unique", ["email"]);
 
 =head1 RELATIONS
 
+=head2 campaigns
+
+Type: has_many
+
+Related object: L<SearchAd::Schema::Result::Campaign>
+
+=cut
+
+__PACKAGE__->has_many(
+  "campaigns",
+  "SearchAd::Schema::Result::Campaign",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -174,8 +189,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 15:09:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zeY0z+3p1vAxUxPRmyvUKw
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 15:17:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mFHaI5b/AqkN6x8Kltlzjg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
