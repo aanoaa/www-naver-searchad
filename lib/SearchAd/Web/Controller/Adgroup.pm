@@ -53,6 +53,7 @@ sub adgroup {
                 bid_min      => $hashref->{bidAmt} - $hashref->{bidAmt} / 2,
                 bid_max      => $hashref->{bidAmt} + $hashref->{bidAmt} / 2,
                 bid_interval => $hashref->{bidAmt} / 10,
+                bid_amt      => $hashref->{bidAmt},
             }
         );
         my $keyword = $keyword_rs->create(
@@ -61,7 +62,6 @@ sub adgroup {
                 rank_id    => $rank->id,
                 str_id     => $hashref->{nccKeywordId},
                 name       => $hashref->{keyword},
-                bid_amt    => $hashref->{bidAmt}
             }
         );
     }

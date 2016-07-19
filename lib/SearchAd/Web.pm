@@ -72,6 +72,8 @@ sub _private_routes {
 
     my $adgroup = $adgroups->under('/:adgroup_id')->to('adgroup#adgroup_id');
     $adgroup->get('/')->to('adgroup#adgroup');
+
+    $r->put('/ranks/:rank_id')->to('rank#update_rank');
 }
 
 sub _extend_validator {
