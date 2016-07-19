@@ -27,8 +27,14 @@ while (1) {
         my ( $rank_id, $amt, $keyword_id, $group_id, $user_id ) = split /:/, $str;
 
         my $rank = $schema->resultset('Rank')->find( { id => $rank_id } );
+
+        if ( $rank->bid_amt == $amt ) {
+            $dirq->remove($name);
+            next;
+        }
+
         my $user = $schema->resultset('User')->find( { id => $user_id } );
-        my $api  = WWW::Naver::SearchAd->new(
+        my $api = WWW::Naver::SearchAd->new(
             customer_id => $user->customer_id,
             key         => $user->api_key,
             secret      => $user->api_secret
