@@ -28,6 +28,7 @@ sub startup {
     my $self = shift;
 
     $self->plugin('Config');
+    $self->plugin('Number::Commify');
     $self->plugin('SearchAd::Web::Plugin::Helpers');
 
     $self->secrets( $self->config->{secrets} );
