@@ -37,31 +37,43 @@ __PACKAGE__->table("rank");
 =head2 rank
 
   data_type: 'integer'
-  default_value: null
+  default_value: 0
   is_nullable: 1
 
 =head2 tobe
 
   data_type: 'integer'
-  default_value: null
+  default_value: 0
   is_nullable: 1
 
 =head2 bid_max
 
   data_type: 'integer'
-  default_value: null
+  default_value: 0
   is_nullable: 1
 
 =head2 bid_min
 
   data_type: 'integer'
-  default_value: null
+  default_value: 0
   is_nullable: 1
 
 =head2 bid_interval
 
   data_type: 'integer'
-  default_value: null
+  default_value: 0
+  is_nullable: 1
+
+=head2 bid_amt
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 1
+
+=head2 on_off
+
+  data_type: 'integer'
+  default_value: 0
   is_nullable: 1
 
 =head2 create_date
@@ -87,15 +99,19 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "rank",
-  { data_type => "integer", default_value => \"null", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "tobe",
-  { data_type => "integer", default_value => \"null", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "bid_max",
-  { data_type => "integer", default_value => \"null", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "bid_min",
-  { data_type => "integer", default_value => \"null", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "bid_interval",
-  { data_type => "integer", default_value => \"null", is_nullable => 1 },
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
+  "bid_amt",
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
+  "on_off",
+  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "create_date",
   {
     data_type        => "text",
@@ -145,8 +161,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:57:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:endr0y3imUoJkvvKS1Q2+w
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 19:59:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XI1SFG+9CvfTFUIhYeowRw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

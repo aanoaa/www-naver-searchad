@@ -57,11 +57,13 @@ CREATE TABLE adgroup (
 
 CREATE TABLE rank (
     id           INTEGER PRIMARY KEY,
-    rank         INTEGER DEFAULT NULL,
-    tobe         INTEGER DEFAULT NULL,
-    bid_max      INTEGER DEFAULT NULL,
-    bid_min      INTEGER DEFAULT NULL,
-    bid_interval INTEGER DEFAULT NULL,
+    rank         INTEGER DEFAULT 0,
+    tobe         INTEGER DEFAULT 0,
+    bid_max      INTEGER DEFAULT 0,
+    bid_min      INTEGER DEFAULT 0,
+    bid_interval INTEGER DEFAULT 0,
+    bid_amt      INTEGER DEFAULT 0,
+    on_off       INTEGER DEFAULT 0,
     create_date  TEXT DEFAULT NULL,
     update_date  TEXT DEFAULT NULL
 );
@@ -72,8 +74,6 @@ CREATE TABLE adkeyword (
     rank_id     INTEGER REFERENCES rank(id)    ON DELETE CASCADE ON UPDATE CASCADE,
     str_id      TEXT NOT NULL,
     name        TEXT NOT NULL,
-    bid_amt     INTEGER DEFAULT 0,
-    on_off      INTEGER DEFAULT 0,
     create_date TEXT DEFAULT NULL,
     update_date TEXT DEFAULT NULL
 );

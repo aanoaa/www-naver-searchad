@@ -56,18 +56,6 @@ __PACKAGE__->table("adkeyword");
   data_type: 'text'
   is_nullable: 0
 
-=head2 bid_amt
-
-  data_type: 'integer'
-  default_value: 0
-  is_nullable: 1
-
-=head2 on_off
-
-  data_type: 'integer'
-  default_value: 0
-  is_nullable: 1
-
 =head2 create_date
 
   data_type: 'text'
@@ -98,10 +86,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
-  "bid_amt",
-  { data_type => "integer", default_value => 0, is_nullable => 1 },
-  "on_off",
-  { data_type => "integer", default_value => 0, is_nullable => 1 },
   "create_date",
   {
     data_type        => "text",
@@ -176,8 +160,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:57:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vh+D04+rTU+bNJYvmEsoyw
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 19:59:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ud/iuoSERkdzUgQPQOm0EQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
