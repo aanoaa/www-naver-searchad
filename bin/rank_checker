@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use Directory::Queue;
 use SearchAd::Schema;
 use WWW::Naver::SearchAd::Rank 'find_rank';
 
@@ -15,15 +16,17 @@ my $schema = SearchAd::Schema->connect(
     }
 );
 
+my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
+
 while (1) {
     my $rs = $schema->resultset('Rank')->search( { on_off => 1 } );
-    while ( my $rank = $rs->next ) {
-        my $adkeyword = $rank->adkeywords->next;
+    while ( my $r = $rs->next ) {
+        my $adkeyword = $r->adkeywords->next;
         my $adgroup   = $adkeyword->adgroup;
         my $url       = $adgroup->target->url;
         $url =~ s{^https?://}{};
-        my $r = find_rank( $adkeyword->name, $url );
-        $rank->update( { rank => $r } ) if $r;
+        my $rank = find_rank( $adkeyword->name, $url ) || 0;
+        $r->update( { rank => $rank } );
     }
 
     sleep(60);

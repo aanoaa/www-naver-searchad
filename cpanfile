@@ -1,4 +1,5 @@
 requires 'Digest::SHA';
+requires 'Directory::Queue';
 requires 'Email::Valid';
 requires 'Encode';
 requires 'Getopt::Long';
