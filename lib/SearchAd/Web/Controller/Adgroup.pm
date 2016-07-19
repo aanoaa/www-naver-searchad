@@ -2,6 +2,7 @@ package SearchAd::Web::Controller::Adgroup;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Mojo::JSON qw/decode_json/;
+use POSIX qw/floor/;
 
 has schema => sub { shift->app->schema };
 
@@ -48,11 +49,12 @@ sub adgroup {
     my $keywords = decode_json( $api->keywords( $adgroup->str_id ) );
     for my $hashref (@$keywords) {
         # 현재 금액의 반땅 더하고 뺀다, 현재 금액의 10%
+        my $half = floor( $hashref->{bidAmt} / 20 ) * 10;
         my $rank = $self->schema->resultset('Rank')->create(
             {
-                bid_min      => $hashref->{bidAmt} - $hashref->{bidAmt} / 2,
-                bid_max      => $hashref->{bidAmt} + $hashref->{bidAmt} / 2,
-                bid_interval => $hashref->{bidAmt} / 10,
+                bid_min      => $hashref->{bidAmt} - $half,
+                bid_max      => $hashref->{bidAmt} + $half,
+                bid_interval => floor( $hashref->{bidAmt} / 100 ) * 10,
                 bid_amt      => $hashref->{bidAmt},
             }
         );
