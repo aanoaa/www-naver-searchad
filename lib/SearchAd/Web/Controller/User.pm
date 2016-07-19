@@ -145,10 +145,6 @@ sub create {
 
 sub profile {
     my $self = shift;
-    my $user = $self->stash('user');
-
-    my $profile = $self->schema->resultset('Profile')->find( { user_id => $user->id } );
-    $self->render( profile => $profile );
 }
 
 =head2 update_profile
@@ -175,16 +171,14 @@ sub update_profile {
     my $key         = $v->param('api-key');
     my $secret      = $v->param('api-secret');
 
-    my $profile = $self->schema->resultset('Profile')->update_or_create(
+    $user->update(
         {
-            user_id     => $user->id,
             customer_id => $customer_id,
             api_key     => $key,
             api_secret  => $secret,
         }
     );
 
-    return $self->error( 500, "Couldn't create a new profile" ) unless $profile;
     $self->redirect_to('/profile');
 }
 
