@@ -2,6 +2,8 @@ package SearchAd::Web::Plugin::Helpers;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
+use WWW::Naver::SearchAd;
+
 =encoding utf8
 
 =head1 NAME
@@ -23,6 +25,7 @@ sub register {
 
     $app->helper( log => sub { shift->app->log } );
     $app->helper( error => \&error );
+    $app->helper( api   => \&api );
 }
 
 =head1 HELPERS
@@ -65,6 +68,25 @@ sub error {
     );
 
     return;
+}
+
+=head2 api
+
+    my $json = $self->api->campaigns;
+
+=cut
+
+sub api {
+    my $self = shift;
+    my $user = $self->stash('user');
+    return unless $user;
+    return unless $user->customer_id or $user->api_key or $user->api_secret;
+
+    return WWW::Naver::SearchAd->new(
+        customer_id => $user->customer_id,
+        key         => $user->api_key,
+        secret      => $user->api_secret
+    );
 }
 
 =head1 COPYRIGHT

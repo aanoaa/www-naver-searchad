@@ -1,0 +1,43 @@
+% layout 'default';
+% title $adgroup->name . ' Adgroup';
+
+<h2>
+  %= $adgroup->name
+</h2>
+<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+<hr>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>키워드</th>
+      <th>입찰가</th>
+      <th>최대가</th>
+      <th>최소가</th>
+      <th>목표순위</th>
+      <th>현재순위</th>
+      <th>가감액</th>
+      <th>target link</th>
+      <th>변경시간</th>
+      <th>on / off</th>
+    </tr>
+  </thead>
+  <tbody>
+    % while (my $adkeyword = $adkeywords->next) {
+    % my $rank = $adkeyword->rank;
+    <tr>
+      <td><%= $adkeyword->name %></td>
+      <td><%= $adkeyword->bid_amt %></td>
+      <td><%= $rank->bid_max %></td>
+      <td><%= $rank->bid_min %></td>
+      <td><%= $rank->tobe %></td>
+      <td><%= $rank->rank %></td>
+      <td><%= $rank->bid_interval %></td>
+      <td><%= $adgroup->target->url %></td>
+      <td><%= $rank->update_date %></td>
+      <td><%= $adkeyword->on_off %></td>
+    </tr>
+    % }
+  </tbody>
+</table>

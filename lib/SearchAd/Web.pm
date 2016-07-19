@@ -7,7 +7,13 @@ use SearchAd::Schema;
 use version; our $VERSION = qv("v0.0.1");
 
 has schema => sub {
-    return SearchAd::Schema->connect( { dsn => "dbi:SQLite:db/searchad.db", quote_char => q{`}, sqlite_unicode => 1, } );
+    return SearchAd::Schema->connect(
+        {
+            dsn            => "dbi:SQLite:db/searchad.db",
+            quote_char     => q{`},
+            sqlite_unicode => 1,
+        }
+    );
 };
 
 =head1 METHODS
@@ -56,10 +62,15 @@ sub _private_routes {
     my $self = shift;
     my $root = $self->routes;
 
-    my $r = $root->under('/')->to('user#auth');
+    my $r        = $root->under('/')->to('user#auth');
+    my $adgroups = $root->under('/adgroups')->to('user#auth');
+
     $r->get('/')->to('root#index');
     $r->get('/profile')->to('user#profile');
     $r->post('/profile')->to('user#update_profile');
+
+    my $adgroup = $adgroups->under('/:adgroup_id')->to('adgroup#adgroup_id');
+    $adgroup->get('/')->to('adgroup#adgroup');
 }
 
 sub _extend_validator {
