@@ -5,6 +5,11 @@ CREATE TABLE user (
     username    TEXT NOT NULL,
     password    TEXT NOT NULL,
     email       TEXT NOT NULL,
+
+    customer_id TEXT DEFAULT NULL,
+    api_key     TEXT DEFAULT NULL,
+    api_secret  TEXT DEFAULT NULL,
+
     create_date TEXT DEFAULT NULL,
     update_date TEXT DEFAULT NULL,
     UNIQUE (email)
@@ -22,16 +27,6 @@ CREATE TABLE user_role (
     user_id INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
     role_id INTEGER REFERENCES role(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (user_id, role_id)
-);
-
-CREATE TABLE profile (
-    id          INTEGER PRIMARY KEY,
-    user_id     INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    customer_id TEXT DEFAULT NULL,
-    api_key     TEXT DEFAULT NULL,
-    api_secret  TEXT DEFAULT NULL,
-    create_date TEXT DEFAULT NULL,
-    update_date TEXT DEFAULT NULL
 );
 
 CREATE TABLE campaign (

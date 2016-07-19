@@ -49,6 +49,24 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 customer_id
+
+  data_type: 'text'
+  default_value: null
+  is_nullable: 1
+
+=head2 api_key
+
+  data_type: 'text'
+  default_value: null
+  is_nullable: 1
+
+=head2 api_secret
+
+  data_type: 'text'
+  default_value: null
+  is_nullable: 1
+
 =head2 create_date
 
   data_type: 'text'
@@ -77,6 +95,12 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "email",
   { data_type => "text", is_nullable => 0 },
+  "customer_id",
+  { data_type => "text", default_value => \"null", is_nullable => 1 },
+  "api_key",
+  { data_type => "text", default_value => \"null", is_nullable => 1 },
+  "api_secret",
+  { data_type => "text", default_value => \"null", is_nullable => 1 },
   "create_date",
   {
     data_type        => "text",
@@ -124,21 +148,6 @@ __PACKAGE__->add_unique_constraint("email_unique", ["email"]);
 
 =head1 RELATIONS
 
-=head2 profiles
-
-Type: has_many
-
-Related object: L<SearchAd::Schema::Result::Profile>
-
-=cut
-
-__PACKAGE__->has_many(
-  "profiles",
-  "SearchAd::Schema::Result::Profile",
-  { "foreign.user_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 user_roles
 
 Type: has_many
@@ -165,8 +174,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:30:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pGq+mCRW3Q0VWzoE4TJmKw
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 15:09:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zeY0z+3p1vAxUxPRmyvUKw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
