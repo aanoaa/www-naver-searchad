@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Directory::Queue;
+use SearchAd::Schema;
+use WWW::Naver::SearchAd;
+use Mojo::JSON qw/decode_json/;
+
+STDOUT->autoflush(1);
+
+my $schema = SearchAd::Schema->connect(
+    {
+        dsn            => "dbi:SQLite:db/searchad.db",
+        quote_char     => q{`},
+        sqlite_unicode => 1,
+    }
+);
+
+my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
+
+while (1) {
+    for ( my $name = $dirq->first(); $name; $name = $dirq->next() ) {
+        next unless $dirq->lock($name);
+
+        my $str = $dirq->get($name);
+        my ( $rank_id, $amt, $keyword_id, $group_id, $user_id ) = split /:/, $str;
+
+        my $rank = $schema->resultset('Rank')->find( { id => $rank_id } );
+        my $user = $schema->resultset('User')->find( { id => $user_id } );
+        my $api  = WWW::Naver::SearchAd->new(
+            customer_id => $user->customer_id,
+            key         => $user->api_key,
+            secret      => $user->api_secret
+        );
+
+        my $json = $api->update_keyword( $keyword_id, $amt, 'false', $group_id );
+        if ($json) {
+            my $data = decode_json($json);
+            $rank->update( { bid_amt => $data->{bidAmt} } );
+        }
+        $dirq->remove($name);
+    }
+
+    sleep(10);
+}
