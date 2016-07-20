@@ -1,6 +1,7 @@
 package SearchAd::Web::Controller::Adgroup;
 use Mojo::Base 'Mojolicious::Controller';
 
+use Data::Pageset;
 use Mojo::JSON qw/decode_json/;
 use POSIX qw/floor/;
 
@@ -37,11 +38,24 @@ sub adgroup_id {
 sub adgroup {
     my $self    = shift;
     my $adgroup = $self->stash('adgroup');
+    my $p       = $self->param('p') || 1;
 
-    $self->stash( ranks => undef );
+    my $attr = { page => $p, rows => 20 };
+
+    $self->stash( adkeywords => undef, pageset => undef );
     my $keyword_rs = $self->schema->resultset('Adkeyword');
-    my $rs = $keyword_rs->search( { adgroup_id => $adgroup->id } );
-    return $self->render( adkeywords => $rs ) if $rs->count;
+    my $rs         = $keyword_rs->search( { adgroup_id => $adgroup->id }, $attr );
+    my $pager      = $rs->pager;
+    my $pageset    = Data::Pageset->new(
+        {
+            total_entries    => $pager->total_entries,
+            entries_per_page => $pager->entries_per_page,
+            pages_per_set    => 5,
+            current_page     => $p,
+        }
+    );
+
+    return $self->render( adkeywords => $rs, pageset => $pageset ) if $rs->count;
 
     my $api = $self->api;
     return $self->render unless $api;
@@ -54,7 +68,7 @@ sub adgroup {
             {
                 bid_min      => $hashref->{bidAmt} - $half,
                 bid_max      => $hashref->{bidAmt} + $half,
-                bid_interval => floor( $hashref->{bidAmt} / 100 ) * 10,
+                bid_interval => floor( $hashref->{bidAmt} / 10 ),
                 bid_amt      => $hashref->{bidAmt},
             }
         );
@@ -68,8 +82,17 @@ sub adgroup {
         );
     }
 
-    $rs = $keyword_rs->search( { adgroup_id => $adgroup->id } );
-    $self->render( adkeywords => $rs );
+    $rs      = $keyword_rs->search( { adgroup_id => $adgroup->id }, $attr );
+    $pager   = $rs->pager;
+    $pageset = Data::Pageset->new(
+        {
+            total_entries    => $pager->total_entries,
+            entries_per_page => $pager->entries_per_page,
+            pages_per_set    => 5,
+            current_page     => $p,
+        }
+    );
+    $self->render( adkeywords => $rs, pageset => $pageset );
 }
 
 1;

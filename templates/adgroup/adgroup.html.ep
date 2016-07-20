@@ -21,6 +21,11 @@
 
 <hr>
 
+% if ($pageset) {
+<div class="pull-right">
+  %= include 'partials/pagination', pageset => $pageset;
+</div>
+% }
 <table class="table table-bordered table-striped table-hover table-condensed">
   <thead>
     <tr>
@@ -81,3 +86,8 @@
     % }
   </tbody>
 </table>
+% if ($pageset) {
+<div class="pull-right">
+  %= include 'partials/pagination', pageset => $pageset;
+</div>
+% }
