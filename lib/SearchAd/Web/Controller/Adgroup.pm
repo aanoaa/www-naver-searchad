@@ -110,6 +110,7 @@ sub update_ranks {
     my $adgroup = $self->stash('adgroup');
 
     my $v = $self->validation;
+    $v->optional('tobe')->size( 1, 2 );
     $v->optional('on_off');
 
     if ( $v->has_error ) {
@@ -117,12 +118,14 @@ sub update_ranks {
         return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
     }
 
-    my $on_off = $v->param('on_off');
-    my $guard  = $self->schema->txn_scope_guard;
-    my $ranks  = $adgroup->adkeywords->search_related('rank');
+    my $input = $v->input;
+    map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
+
+    my $guard = $self->schema->txn_scope_guard;
+    my $ranks = $adgroup->adkeywords->search_related('rank');
     try {
         while ( my $rank = $ranks->next ) {
-            $rank->update( { on_off => $on_off } );
+            $rank->update($input);
         }
         $guard->commit;
     }
@@ -131,7 +134,7 @@ sub update_ranks {
         $self->log->error($_);
     };
 
-    $self->respond_to( json => { $adgroup->get_columns } );
+    $self->render( json => { $adgroup->get_columns } );
 }
 
 1;
