@@ -1,0 +1,5 @@
+% layout 'default';
+% title 'Server error';
+
+<h2>500 Server error</h2>
+<p><%= $error %></p>

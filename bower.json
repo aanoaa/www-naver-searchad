@@ -1,0 +1,28 @@
+{
+  "name": "searchad-web",
+  "homepage": "https://github.com/aanoaa/www-naver-searchad",
+  "authors": [
+    "Hyungsuk Hong <aanoaa@gmail.com>"
+  ],
+  "description": "no description",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "underscore": "~1.8.3",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "~4.5.0",
+    "bootstrap-toggle": "^2.2.2",
+    "x-editable": "^1.5.1",
+    "jquery-timeago": "^1.5.3"
+  }
+}

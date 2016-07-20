@@ -1,0 +1,83 @@
+% layout 'default';
+% title $adgroup->name . ' Adgroup', jses => [
+%   '/assets/components/bootstrap-toggle/js/bootstrap-toggle.min.js',
+%   '/assets/components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js',
+%   '/assets/components/jquery-timeago/jquery.timeago.js',
+%   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
+%   '/assets/dist/js/adgroup.min.js'
+% ], csses => [
+%   '/assets/components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css',
+%   '/assets/components/bootstrap-toggle/css/bootstrap-toggle.min.css'
+% ];
+
+<h2>
+  %= $adgroup->name
+  <small>
+    % my $url = $adgroup->target->url;
+    <a href="<%= $url %>"><%= $url %></a>
+  </small>
+</h2>
+<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+<hr>
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+  <thead>
+    <tr>
+      <th>on/off</th>
+      <th>키워드</th>
+      <th>입찰가</th>
+      <th>최대가</th>
+      <th>최소가</th>
+      <th>목표순위</th>
+      <th>현재순위</th>
+      <th>가감액</th>
+      <th>변경시간</th>
+    </tr>
+  </thead>
+  <tbody>
+    % while (my $adkeyword = $adkeywords->next) {
+    % my $rank = $adkeyword->rank;
+    % my $url = url_for('/ranks/' . $rank->id);
+    <tr>
+      <td>
+        <input <%= $rank->on_off ? 'checked' : '' %> name="on_off" data-toggle="toggle" data-on="On" data-off="Off" data-onstyle="success" data-size="small" type="checkbox" data-url="<%= $url %>" value="1">
+      </td>
+      <td>
+        % my $keyword = $adkeyword->name;
+        <a href="https://search.naver.com/search.naver?query=<%= $keyword %>" target="_blank" class="btn btn-sm btn-link">
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+          <%= $keyword %>
+        </a>
+      </td>
+      <td class="text-right"><samp><%= commify $rank->bid_amt %></samp></td>
+      <td class="text-right">
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_max" data-title="최대가" data-pk="1">
+          %= $rank->bid_max
+        </a>
+      </td>
+      <td class="text-right">
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_min" data-title="최소가" data-pk="1">
+          %= $rank->bid_min
+        </a>
+      </td>
+      <td class="text-right">
+        <a href="#" class="rank-rank-editable" data-type="select" data-url="<%= $url %>" data-name="tobe" data-title="목표순위" data-pk="1">
+          %= $rank->tobe || 0
+        </a>
+      </td>
+      <td class="text-right"><samp><%= $rank->rank || 'Unknown' %></samp></td>
+      <td class="text-right">
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_interval" data-title="가감액" data-pk="1">
+          %= $rank->bid_interval
+        </a>
+      </td>
+      <td>
+        <abbr class="timeago" title="<%= $rank->update_date->ymd %>T<%= $rank->update_date->hms %>Z">
+          %= $rank->update_date
+        </abbr>
+      </td>
+    </tr>
+    % }
+  </tbody>
+</table>

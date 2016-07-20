@@ -1,0 +1,5 @@
+% layout 'default';
+% title 'Bad request';
+
+<h2>400 Bad request</h2>
+<p><%= $error %></p>

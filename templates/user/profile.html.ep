@@ -1,0 +1,23 @@
+% layout 'default';
+% title 'Profile';
+
+<h2>Profile</h2>
+<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+<hr>
+
+<form method="POST" action="<%= url_for %>">
+  <div class="form-group">
+    <label>Customer ID</label>
+    <input type="text" name="customer-id" class="form-control" placeholder="Customer ID" value="<%= $user->customer_id || '' %>">
+  </div>
+  <div class="form-group">
+    <label>API KEY</label>
+    <input type="text" name="api-key" class="form-control" placeholder="API KEY" value="<%= $user->api_key || '' %>">
+  </div>
+  <div class="form-group">
+    <label>API SECRET</label>
+    <input type="text" name="api-secret" class="form-control" placeholder="API SECRET" value="<%= $user->api_secret || '' %>">
+  </div>
+  <button type="submit" class="btn btn-success">Update</button>
+</form>
