@@ -21,3 +21,4 @@ public/assets/components/
 public/assets/dist/
 searchad.conf
 *.db
+hypnotoad.pid

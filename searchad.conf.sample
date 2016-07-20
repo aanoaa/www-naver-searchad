@@ -1,2 +1,8 @@
 #!/usr/bin/env perl
-{ secrets => ['c22b5f9178342609428d6f51b2c5af4c0bde6a42'] };
+{
+    hypnotoad => {
+        listen  => ['http://*:7623'],
+        workers => 3,
+    },
+    secrets => ['c22b5f9178342609428d6f51b2c5af4c0bde6a42']
+};
