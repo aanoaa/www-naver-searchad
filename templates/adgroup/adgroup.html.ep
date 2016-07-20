@@ -44,7 +44,12 @@
         </a>
       </th>
       <th>현재순위</th>
-      <th>가감액</th>
+      <th>
+        가감액
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="bid_interval" data-title="가감액" data-pk="1">
+          0
+        </a>
+      </th>
       <th>변경시간</th>
     </tr>
   </thead>

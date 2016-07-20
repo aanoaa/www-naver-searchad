@@ -29,6 +29,7 @@ $ ->
       complete: (jqXHR, textStatus) ->
 
   $('.rank-editable').editable
+    success: -> location.reload()
     params: (params) ->
       params[params.name] = params.value
       params
