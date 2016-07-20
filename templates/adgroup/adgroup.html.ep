@@ -43,7 +43,13 @@
       <td>
         <input <%= $rank->on_off ? 'checked' : '' %> name="on_off" data-toggle="toggle" data-on="On" data-off="Off" data-onstyle="success" data-size="small" type="checkbox" data-url="<%= $url %>" value="1">
       </td>
-      <td><%= $adkeyword->name %></td>
+      <td>
+        % my $keyword = $adkeyword->name;
+        <a href="https://search.naver.com/search.naver?query=<%= $keyword %>" target="_blank" class="btn btn-sm btn-link">
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+          <%= $keyword %>
+        </a>
+      </td>
       <td class="text-right"><samp><%= commify $rank->bid_amt %></samp></td>
       <td class="text-right">
         <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_max" data-title="최대가" data-pk="1">
