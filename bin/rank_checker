@@ -55,5 +55,5 @@ while (1) {
         $dirq->add($str);
     }
 
-    sleep(90);
+    sleep(120);
 }
