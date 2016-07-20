@@ -9,3 +9,4 @@ requires 'JSON';
 requires 'Mojolicious::Plugin::Number::Commify';
 requires 'Moo';
 requires 'Pod::Usage';
+requires 'Try::Tiny';

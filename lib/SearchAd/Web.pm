@@ -72,6 +72,7 @@ sub _private_routes {
 
     my $adgroup = $adgroups->under('/:adgroup_id')->to('adgroup#adgroup_id');
     $adgroup->get('/')->to('adgroup#adgroup');
+    $adgroup->put('/ranks')->to('adgroup#update_ranks');
 
     $r->put('/ranks/:rank_id')->to('rank#update_rank');
 }

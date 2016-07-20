@@ -17,6 +17,17 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
+  $('.btn-on-off').click ->
+    $this = $(@)
+    v = $this.data('on-off')
+    $.ajax $this.data('url'),
+      type: 'PUT'
+      data: { on_off: v }
+      success: (data, textStatus, jqXHR) ->
+        location.reload(true)
+      error: (jqXHR, textStatus, errorThrown) ->
+      complete: (jqXHR, textStatus) ->
+
   $('.rank-editable').editable
     params: (params) ->
       params[params.name] = params.value

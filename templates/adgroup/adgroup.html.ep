@@ -29,7 +29,10 @@
 <table class="table table-bordered table-striped table-hover table-condensed">
   <thead>
     <tr>
-      <th>on/off</th>
+      <th>
+        <button class="btn btn-success btn-sm btn-on-off" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="1">on</button>
+        <button class="btn btn-default btn-sm btn-on-off" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="0">off</button>
+      </th>
       <th>키워드</th>
       <th>입찰가</th>
       <th>최대가</th>

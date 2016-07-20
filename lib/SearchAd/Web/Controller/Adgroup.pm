@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Pageset;
 use Mojo::JSON qw/decode_json/;
 use POSIX qw/floor/;
+use Try::Tiny;
 
 has schema => sub { shift->app->schema };
 
@@ -96,6 +97,41 @@ sub adgroup {
         }
     );
     $self->render( adkeywords => $rs, pageset => $pageset );
+}
+
+=head2 update_ranks
+
+    PUT /adgroups/:adgroup_id/ranks
+
+=cut
+
+sub update_ranks {
+    my $self    = shift;
+    my $adgroup = $self->stash('adgroup');
+
+    my $v = $self->validation;
+    $v->optional('on_off');
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $on_off = $v->param('on_off');
+    my $guard  = $self->schema->txn_scope_guard;
+    my $ranks  = $adgroup->adkeywords->search_related('rank');
+    try {
+        while ( my $rank = $ranks->next ) {
+            $rank->update( { on_off => $on_off } );
+        }
+        $guard->commit;
+    }
+    catch {
+        chomp;
+        $self->log->error($_);
+    };
+
+    $self->respond_to( json => { $adgroup->get_columns } );
 }
 
 1;
