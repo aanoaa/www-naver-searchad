@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
 use Mojo::JSON qw/decode_json/;
-use POSIX qw/floor/;
+use POSIX qw/ceil floor/;
 use Try::Tiny;
 
 has schema => sub { shift->app->schema };
@@ -72,7 +72,7 @@ sub adgroup {
             {
                 bid_min      => $min,
                 bid_max      => $max,
-                bid_interval => floor( $hashref->{bidAmt} / 10 ),
+                bid_interval => ceil( $hashref->{bidAmt} / 100 ) * 10,
                 bid_amt      => $hashref->{bidAmt},
             }
         );
