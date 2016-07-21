@@ -6,14 +6,18 @@ use Directory::Queue;
 use SearchAd::Schema;
 use WWW::Naver::SearchAd;
 use Mojo::JSON qw/decode_json/;
+use FindBin qw($Bin);
 
 STDOUT->autoflush(1);
 
-my $schema = SearchAd::Schema->connect(
+my $config  = require "$Bin/../searchad.conf";
+my $db_conf = $config->{database};
+my $schema  = SearchAd::Schema->connect(
     {
-        dsn            => "dbi:SQLite:db/searchad.db",
-        quote_char     => q{`},
-        sqlite_unicode => 1,
+        dsn      => $db_conf->{dsn},
+        user     => $db_conf->{user},
+        password => $db_conf->{pass},
+        %{ $db_conf->{opts} },
     }
 );
 

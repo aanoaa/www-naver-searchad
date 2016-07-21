@@ -108,6 +108,9 @@ sub adgroup {
 sub update_ranks {
     my $self    = shift;
     my $adgroup = $self->stash('adgroup');
+    my $p       = $self->param('p') || 1;
+
+    my $attr = { page => $p, rows => 20 };
 
     my $v = $self->validation;
     $v->optional('tobe')->size( 1, 2 );
@@ -120,14 +123,12 @@ sub update_ranks {
     }
 
     my $input = $v->input;
-    map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
+    map { delete $input->{$_} } qw/name pk value p/; # delete x-editable params
 
+    my $ranks = $adgroup->adkeywords->search_related( 'rank', undef, $attr );
     my $guard = $self->schema->txn_scope_guard;
-    my $ranks = $adgroup->adkeywords->search_related('rank');
     try {
-        while ( my $rank = $ranks->next ) {
-            $rank->update($input);
-        }
+        $ranks->update($input);
         $guard->commit;
     }
     catch {

@@ -30,8 +30,8 @@
   <thead>
     <tr>
       <th>
-        <button class="btn btn-success btn-sm btn-on-off" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="1">on</button>
-        <button class="btn btn-default btn-sm btn-on-off" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="0">off</button>
+        <button class="btn btn-success btn-sm btn-on-off" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="1">on</button>
+        <button class="btn btn-default btn-sm btn-on-off" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-on-off="0">off</button>
       </th>
       <th>키워드</th>
       <th>입찰가</th>
@@ -39,14 +39,14 @@
       <th>최소가</th>
       <th>
         목표순위
-        <a href="#" class="rank-rank-editable" data-type="select" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="tobe" data-title="목표순위" data-pk="1">
+        <a href="#" class="rank-rank-editable" data-type="select" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="tobe" data-title="목표순위" data-pk="1">
           0
         </a>
       </th>
       <th>현재순위</th>
       <th>
         가감액
-        <a href="#" class="rank-editable" data-type="text" data-url="<%= url_for('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="bid_interval" data-title="가감액" data-pk="1">
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="bid_interval" data-title="가감액" data-pk="1">
           0
         </a>
       </th>
