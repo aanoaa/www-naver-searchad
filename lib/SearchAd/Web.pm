@@ -7,11 +7,14 @@ use SearchAd::Schema;
 use version; our $VERSION = qv("v0.0.1");
 
 has schema => sub {
-    return SearchAd::Schema->connect(
+    my $self = shift;
+    my $conf = $self->config->{database};
+    SearchAd::Schema->connect(
         {
-            dsn            => "dbi:SQLite:db/searchad.db",
-            quote_char     => q{`},
-            sqlite_unicode => 1,
+            dsn      => $conf->{dsn},
+            user     => $conf->{user},
+            password => $conf->{pass},
+            %{ $conf->{opts} },
         }
     );
 };

@@ -19,14 +19,14 @@ CREATE TABLE user (
 
     PRIMARY KEY (`id`),
     UNIQUE (email)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE role (
     id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
     role VARCHAR(32) NOT NULL,
 
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO role VALUES (1, 'user');
 INSERT INTO role VALUES (2, 'admin');
@@ -38,7 +38,7 @@ CREATE TABLE user_role (
     PRIMARY KEY (user_id, role_id),
     CONSTRAINT fk_user_role1 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
     CONSTRAINT fk_user_role2 FOREIGN KEY (role_id) REFERENCES role (id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE campaign (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE campaign (
 
     PRIMARY KEY (`id`),
     CONSTRAINT fk_campaign1 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE target (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -59,7 +59,7 @@ CREATE TABLE target (
     update_date DATETIME DEFAULT NULL,
 
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE adgroup (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,7 +73,7 @@ CREATE TABLE adgroup (
     PRIMARY KEY (`id`),
     CONSTRAINT fk_adgroup1 FOREIGN KEY (campaign_id) REFERENCES campaign (id) ON DELETE CASCADE,
     CONSTRAINT fk_adgroup2 FOREIGN KEY (target_id)   REFERENCES target (id)   ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE rank (
     id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -88,8 +88,7 @@ CREATE TABLE rank (
     update_date  DATETIME DEFAULT NULL,
 
     PRIMARY KEY (`id`)
-
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE adkeyword (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -103,4 +102,4 @@ CREATE TABLE adkeyword (
     PRIMARY KEY (`id`),
     CONSTRAINT fk_keyword1 FOREIGN KEY (adgroup_id) REFERENCES adgroup (id) ON DELETE CASCADE,
     CONSTRAINT fk_keyword2 FOREIGN KEY (rank_id)    REFERENCES rank (id)    ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
