@@ -31,54 +31,58 @@ __PACKAGE__->table("user");
 =head2 id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
 =head2 username
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 128
 
 =head2 password
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 64
 
 =head2 email
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 128
 
 =head2 customer_id
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'varchar'
   is_nullable: 1
+  size: 32
 
 =head2 api_key
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'varchar'
   is_nullable: 1
+  size: 128
 
 =head2 api_secret
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'varchar'
   is_nullable: 1
+  size: 128
 
 =head2 create_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
 =head2 update_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
@@ -88,35 +92,40 @@ __PACKAGE__->table("user");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
   "username",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 128 },
   "password",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 64 },
   "email",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 128 },
   "customer_id",
-  { data_type => "text", default_value => \"null", is_nullable => 1 },
+  { data_type => "varchar", is_nullable => 1, size => 32 },
   "api_key",
-  { data_type => "text", default_value => \"null", is_nullable => 1 },
+  { data_type => "varchar", is_nullable => 1, size => 128 },
   "api_secret",
-  { data_type => "text", default_value => \"null", is_nullable => 1 },
+  { data_type => "varchar", is_nullable => 1, size => 128 },
   "create_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
     inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
+    is_nullable => 1,
+    set_on_create => 1,
   },
   "update_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
-    inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
-    set_on_update    => 1,
+    data_type                 => "datetime",
+    datetime_undef_if_invalid => 1,
+    inflate_datetime          => 1,
+    is_nullable               => 1,
+    set_on_create             => 1,
+    set_on_update             => 1,
   },
 );
 
@@ -134,7 +143,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<email_unique>
+=head2 C<email>
 
 =over 4
 
@@ -144,7 +153,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("email_unique", ["email"]);
+__PACKAGE__->add_unique_constraint("email", ["email"]);
 
 =head1 RELATIONS
 
@@ -189,8 +198,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 15:17:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mFHaI5b/AqkN6x8Kltlzjg
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GPyPQ75b9t8c4lECGZAeMA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

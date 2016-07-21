@@ -31,26 +31,28 @@ __PACKAGE__->table("target");
 =head2 id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
 =head2 url
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 256
 
 =head2 create_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
 =head2 update_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
@@ -60,25 +62,30 @@ __PACKAGE__->table("target");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
   "url",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 256 },
   "create_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
     inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
+    is_nullable => 1,
+    set_on_create => 1,
   },
   "update_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
-    inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
-    set_on_update    => 1,
+    data_type                 => "datetime",
+    datetime_undef_if_invalid => 1,
+    inflate_datetime          => 1,
+    is_nullable               => 1,
+    set_on_create             => 1,
+    set_on_update             => 1,
   },
 );
 
@@ -112,8 +119,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:23:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mcbyNixDJlf+Hb8Dj7zgQA
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:65yI2/wN2+B9OhA7RA9k9g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -31,6 +31,7 @@ __PACKAGE__->table("rank");
 =head2 id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
@@ -78,16 +79,16 @@ __PACKAGE__->table("rank");
 
 =head2 create_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
 =head2 update_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
@@ -97,7 +98,12 @@ __PACKAGE__->table("rank");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
   "rank",
   { data_type => "integer", default_value => 0, is_nullable => 1 },
   "tobe",
@@ -114,20 +120,20 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => 0, is_nullable => 1 },
   "create_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
     inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
+    is_nullable => 1,
+    set_on_create => 1,
   },
   "update_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
-    inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
-    set_on_update    => 1,
+    data_type                 => "datetime",
+    datetime_undef_if_invalid => 1,
+    inflate_datetime          => 1,
+    is_nullable               => 1,
+    set_on_create             => 1,
+    set_on_update             => 1,
   },
 );
 
@@ -161,8 +167,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 19:59:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XI1SFG+9CvfTFUIhYeowRw
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ciS2maLNJxwAt648WlE/Jw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

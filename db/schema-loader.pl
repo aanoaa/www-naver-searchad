@@ -1,9 +1,16 @@
 {
     schema_class => "SearchAd::Schema",
     connect_info => {
-        dsn            => "dbi:SQLite:db/searchad.db",
-        on_connect_do  => 'PRAGMA foreign_keys = ON',
-        sqlite_unicode => 1,
+        dsn  => $ENV{SEARCHAD_DATABASE_DSN}  || "dbi:mysql:searchad:127.0.0.1",
+        user => $ENV{SEARCHAD_DATABASE_USER} || 'searchad',
+        pass => $ENV{SEARCHAD_DATABASE_PASS} // 'searchad',
+        opts => {
+            quote_char        => q{`},
+            mysql_enable_utf8 => 1,
+            on_connect_do     => 'SET NAMES utf8',
+            RaiseError        => 1,
+            AutoCommit        => 1,
+        },
     },
     loader_options => {
         dump_directory            => 'lib',
