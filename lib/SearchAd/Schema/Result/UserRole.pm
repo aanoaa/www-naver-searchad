@@ -31,12 +31,14 @@ __PACKAGE__->table("user_role");
 =head2 user_id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
 
 =head2 role_id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
 
@@ -44,9 +46,19 @@ __PACKAGE__->table("user_role");
 
 __PACKAGE__->add_columns(
   "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
   "role_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -77,7 +89,7 @@ __PACKAGE__->belongs_to(
   "role",
   "SearchAd::Schema::Result::Role",
   { id => "role_id" },
-  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "RESTRICT" },
 );
 
 =head2 user
@@ -92,12 +104,12 @@ __PACKAGE__->belongs_to(
   "user",
   "SearchAd::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DVWsnyCXRpw7mCPPyQrsmQ
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lhlu3xiEQPTR7IlLog5rJQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

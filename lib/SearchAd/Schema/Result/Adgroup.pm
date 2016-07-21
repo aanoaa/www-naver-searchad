@@ -31,43 +31,48 @@ __PACKAGE__->table("adgroup");
 =head2 id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
 =head2 campaign_id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 target_id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 str_id
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 64
 
 =head2 name
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 64
 
 =head2 create_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
 
 =head2 update_date
 
-  data_type: 'text'
-  default_value: null
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   inflate_datetime: 1
   is_nullable: 1
   set_on_create: 1
@@ -77,31 +82,46 @@ __PACKAGE__->table("adgroup");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
   "campaign_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
   "target_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
   "str_id",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 64 },
   "name",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 64 },
   "create_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
     inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
+    is_nullable => 1,
+    set_on_create => 1,
   },
   "update_date",
   {
-    data_type        => "text",
-    default_value    => \"null",
-    inflate_datetime => 1,
-    is_nullable      => 1,
-    set_on_create    => 1,
-    set_on_update    => 1,
+    data_type                 => "datetime",
+    datetime_undef_if_invalid => 1,
+    inflate_datetime          => 1,
+    is_nullable               => 1,
+    set_on_create             => 1,
+    set_on_update             => 1,
   },
 );
 
@@ -146,12 +166,7 @@ __PACKAGE__->belongs_to(
   "campaign",
   "SearchAd::Schema::Result::Campaign",
   { id => "campaign_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "RESTRICT" },
 );
 
 =head2 target
@@ -166,17 +181,12 @@ __PACKAGE__->belongs_to(
   "target",
   "SearchAd::Schema::Result::Target",
   { id => "target_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-19 18:49:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4XJa+6lyWpEik0J+lg9QeQ
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3doKw8pMzMzv0fUj7pP9ng
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

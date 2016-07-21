@@ -31,21 +31,28 @@ __PACKAGE__->table("role");
 =head2 id
 
   data_type: 'integer'
+  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
 =head2 role
 
-  data_type: 'text'
-  is_nullable: 1
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 32
 
 =cut
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
   "role",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "varchar", is_nullable => 0, size => 32 },
 );
 
 =head1 PRIMARY KEY
@@ -88,8 +95,8 @@ Composing rels: L</user_roles> -> user
 __PACKAGE__->many_to_many("users", "user_roles", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-19 05:00:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZK7Wr9w7+NJI5FnGoYzQIA
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qy1LjFPAo3qv+2s7E0/Tig
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

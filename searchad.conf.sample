@@ -1,5 +1,18 @@
 #!/usr/bin/env perl
 {
+    database => {
+        dsn  => $ENV{SEARCHAD_DATABASE_DSN}  || "dbi:mysql:searchad:127.0.0.1",
+        name => $ENV{SEARCHAD_DATABASE_NAME} || 'searchad',
+        user => $ENV{SEARCHAD_DATABASE_USER} || 'searchad',
+        pass => $ENV{SEARCHAD_DATABASE_PASS} // 'searchad',
+        opts => {
+            quote_char        => q{`},
+            mysql_enable_utf8 => 1,
+            on_connect_do     => 'SET NAMES utf8',
+            RaiseError        => 1,
+            AutoCommit        => 1,
+        },
+    },
     hypnotoad => {
         listen  => ['http://*:7623'],
         workers => 3,
