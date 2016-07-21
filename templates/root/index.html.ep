@@ -21,7 +21,7 @@
     <ul class="list-inline">
       % while (my $adgroup = $adgroups->next) {
       <li>
-        <a href="<%= url_for('/adgroups/' . $adgroup->id) %>">
+        <a href="<%= url_for('/adgroups/' . $adgroup->id) %>" class="btn btn-default btn-sm">
           %= $adgroup->name
         </a>
       </li>
