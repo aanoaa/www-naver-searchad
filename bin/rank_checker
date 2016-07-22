@@ -52,8 +52,9 @@ while (1) {
         $amt = $min if $amt < $min;
         $amt = $max if $amt > $max;
 
-        my $str = sprintf '%s:%s:%s:%s:%s', $r->id, $amt, $adkeyword->str_id, $adgroup->str_id, $user->id;
-        print '[' . localtime . '] [debug] ' . "$str\n";
+        my $str = sprintf 'rank_id(%s):bidAmt(%s):keyword_id(%s):group_id(%s):user_id(%s)', $r->id, $amt, $adkeyword->str_id,
+            $adgroup->str_id, $user->id;
+        print STDERR '[' . localtime . '] [debug] ' . "$str\n";
         $dirq->add($str);
     }
 
