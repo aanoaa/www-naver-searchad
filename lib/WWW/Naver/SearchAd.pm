@@ -6,8 +6,9 @@ use Moo;
 
 use Digest::SHA qw(hmac_sha256_base64);
 use HTTP::Tiny;
-use Time::HiRes qw(gettimeofday);
 use JSON qw/encode_json/;
+use Mojo::Log;
+use Time::HiRes qw(gettimeofday);
 
 our $BASE_URL = 'https://api.naver.com';
 
@@ -21,6 +22,7 @@ has http        => (
         return HTTP::Tiny->new( default_headers => { 'X-API-KEY' => $self->key, 'X-Customer' => $self->customer_id } );
     }
 );
+has log => ( is => 'ro', default => sub { Mojo::Log->new } );
 
 =head1 METHODS
 
@@ -35,7 +37,7 @@ sub request {
 
     my $url = $BASE_URL . $path;
     $url .= "?$params" if $params;
-    print STDERR "--> Working on $method $url ... ";
+    $self->log->debug("--> Working on $method $url ... ");
 
     my $custom_headers = $self->custom_headers( $method, $path );
     if ($opts) {
@@ -48,13 +50,13 @@ sub request {
     my $res = $self->http->request( $method, $url, $opts );
 
     unless ( $res->{success} ) {
-        print STDERR "Failed\n";
-        print STDERR "! $res->{reason}\n";
-        print STDERR "! $res->{content}\n";
+        $self->log->error("Failed");
+        $self->log->error("! $res->{reason}");
+        $self->log->error("! $res->{content}");
         return;
     }
 
-    print STDERR "OK\n";
+    $self->log->debug("OK");
     return $res;
 }
 

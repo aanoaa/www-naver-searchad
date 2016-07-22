@@ -1,13 +1,16 @@
 package WWW::Naver::SearchAd::Rank;
 
-use HTTP::Tiny;
 use Encode qw/decode_utf8/;
+use HTTP::Tiny;
+use Mojo::Log;
 
 require Exporter;
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(find_rank);
 
 our $BASE_URL = 'http://search.naver.com/search.naver';
+
+my $log = Mojo::Log->new;
 
 sub find_rank {
     my ( $keyword, $find ) = @_;
@@ -25,17 +28,17 @@ sub find_rank {
     my $params = $http->www_form_urlencode( { query => $keyword, where => 'ad', ie => 'utf8' } );
     my $url = "$BASE_URL?$params";
 
-    print STDERR "--> Working on $url ... ";
+    $log->debug("--> Working on $url ... ");
 
     my $res = $http->get($url);
 
     unless ( $res->{success} ) {
-        print STDERR "Failed\n";
-        print STDERR "! $res->{reason}\n";
+        $log->error("Failed");
+        $log->error("! $res->{reason}");
         return;
     }
 
-    print STDERR "OK\n";
+    $log->debug("OK");
 
     my $content = decode_utf8( $res->{content} );
     my $rank    = 1;
