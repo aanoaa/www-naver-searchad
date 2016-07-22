@@ -84,7 +84,10 @@
           %= $rank->tobe || 0
         </a>
       </td>
-      <td class="text-right"><samp><%= $rank->rank || 'Unknown' %></samp></td>
+      % my $klass = $rank->rank && $rank->rank == $rank->tobe ? ' success' : '';
+      <td class="text-right<%= $klass %>">
+        <samp><%= $rank->rank || 'Unknown' %></samp>
+      </td>
       <td class="text-right">
         <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_interval" data-title="가감액" data-pk="1">
           %= $rank->bid_interval
