@@ -28,7 +28,7 @@ sub find_rank {
     my $params = $http->www_form_urlencode( { query => $keyword, where => 'ad', ie => 'utf8' } );
     my $url = "$BASE_URL?$params";
 
-    $log->debug("--> Working on $url ... ");
+    $log->debug("--> Working on $BASE_URL?query=$keyword&where=ad&ie=utf8 ... ");
 
     my $res = $http->get($url);
 
