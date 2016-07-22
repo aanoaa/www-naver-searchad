@@ -5,7 +5,7 @@ $.fn.editable.defaults.ajaxOptions =
   dataType: 'json'
 
 $ ->
-  $("abbr.timeago").timeago()
+  $("a.timeago").timeago()
 
   $('input[name=on_off]').change ->
     $this = $(@)

@@ -1,0 +1,46 @@
+% layout 'default';
+% title $adkeyword->name, jses => [
+%   '/assets/components/jquery-timeago/jquery.timeago.js',
+%   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
+%   '/assets/dist/js/adkeyword.min.js'
+% ];
+
+<h2>
+  %= $adkeyword->name
+</h2>
+<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+<hr>
+
+<div class="pull-right">
+  %= include 'partials/pagination', pageset => $pageset;
+</div>
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+  <thead>
+    <tr>
+      <th>이전 입찰가</th>
+      <th>입찰가</th>
+      <th>순위</th>
+      <th>시간</th>
+    </tr>
+  </thead>
+  <tbody>
+    % while (my $log = $logs->next) {
+    <tr class="text-right">
+      <td><samp><%= commify $log->before_amt %></samp></td>
+      <td><samp><%= commify $log->after_amt %></samp></td>
+      <td><samp><%= $log->rank || 'Unknown' %></samp></td>
+      <td>
+        <abbr class="timeago" title="<%= $log->create_date->ymd %>T<%= $log->create_date->hms %>Z">
+          %= $log->create_date
+        </abbr>
+      </td>
+    </tr>
+    % }
+  </tbody>
+</table>
+
+<div class="pull-right">
+  %= include 'partials/pagination', pageset => $pageset;
+</div>

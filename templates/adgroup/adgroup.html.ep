@@ -95,9 +95,9 @@
         </a>
       </td>
       <td>
-        <abbr class="timeago" title="<%= $rank->update_date->ymd %>T<%= $rank->update_date->hms %>Z">
+        <a href="<%= url_for('/adkeywords/' . $adkeyword->id) %>" class="timeago" title="<%= $rank->update_date->ymd %>T<%= $rank->update_date->hms %>Z">
           %= $rank->update_date
-        </abbr>
+        </a>
       </td>
     </tr>
     % }

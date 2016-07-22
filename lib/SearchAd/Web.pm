@@ -66,8 +66,9 @@ sub _private_routes {
     my $self = shift;
     my $root = $self->routes;
 
-    my $r        = $root->under('/')->to('user#auth');
-    my $adgroups = $root->under('/adgroups')->to('user#auth');
+    my $r          = $root->under('/')->to('user#auth');
+    my $adgroups   = $root->under('/adgroups')->to('user#auth');
+    my $adkeywords = $root->under('/adkeywords')->to('user#auth');
 
     $r->get('/')->to('root#index');
     $r->get('/profile')->to('user#profile');
@@ -76,6 +77,9 @@ sub _private_routes {
     my $adgroup = $adgroups->under('/:adgroup_id')->to('adgroup#adgroup_id');
     $adgroup->get('/')->to('adgroup#adgroup');
     $adgroup->put('/ranks')->to('adgroup#update_ranks');
+
+    my $adkeyword = $adkeywords->under('/:adkeyword_id')->to('adkeyword#adkeyword_id');
+    $adkeyword->get('/')->to('adkeyword#adkeyword');
 
     $r->put('/ranks/:rank_id')->to('rank#update_rank');
 }

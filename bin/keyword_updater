@@ -46,8 +46,18 @@ while (1) {
 
         my $json = $api->update_keyword( $keyword_id, $amt, 'false', $group_id );
         if ($json) {
-            my $data = decode_json($json);
+            my $data       = decode_json($json);
+            my $before_amt = $rank->bid_amt;
             $rank->update( { bid_amt => $data->{bidAmt} } );
+            my $adkeyword = $rank->adkeyword;
+            $schema->resultset('Bidlog')->create(
+                {
+                    adkeyword_id => $adkeyword->id,
+                    before_amt   => $before_amt,
+                    after_amt    => $amt,
+                    rank         => $rank->rank,
+                }
+            );
         }
         $dirq->remove($name);
     }
