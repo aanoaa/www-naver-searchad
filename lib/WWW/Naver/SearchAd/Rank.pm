@@ -71,11 +71,11 @@ sub enqueue {
     my $user      = $campaign->user;
     my $url       = $adgroup->target->url;
     $url =~ s{^https?://}{};
-    my $rank = find_rank( $adkeyword->name, $url ) || $adkeyword->max_depth + 1;
+    my $rank = find_rank( $adkeyword->name, $url ) || 0;
     $r->update( { rank => $rank } );
-
     next if $rank == $tobe;
 
+    $rank = $adkeyword->max_depth + 1 unless $rank;
     $int *= -1 if $rank < $tobe;
 
     my $distance = $tobe - $rank;

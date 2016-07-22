@@ -4,7 +4,7 @@ use warnings;
 
 use Directory::Queue;
 use SearchAd::Schema;
-use WWW::Naver::SearchAd::Rank qw/find_rank enqueue/;
+use WWW::Naver::SearchAd::Rank qw/enqueue/;
 use FindBin qw($Bin);
 
 STDOUT->autoflush(1);

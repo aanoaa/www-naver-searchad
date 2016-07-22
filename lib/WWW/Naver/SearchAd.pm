@@ -19,7 +19,12 @@ has http        => (
     is      => 'lazy',
     default => sub {
         my $self = shift;
-        return HTTP::Tiny->new( default_headers => { 'X-API-KEY' => $self->key, 'X-Customer' => $self->customer_id } );
+        return HTTP::Tiny->new(
+            default_headers => {
+                'X-API-KEY'  => $self->key,
+                'X-Customer' => $self->customer_id,
+            },
+        );
     }
 );
 has log => ( is => 'ro', default => sub { Mojo::Log->new } );
