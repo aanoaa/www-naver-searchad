@@ -82,6 +82,7 @@ sub adgroup {
                 rank_id    => $rank->id,
                 str_id     => $hashref->{nccKeywordId},
                 name       => $hashref->{keyword},
+                max_depth  => $hashref->{managedKeyword}{pCPLMaxDepth},
             }
         );
     }

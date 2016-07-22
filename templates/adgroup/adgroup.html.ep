@@ -86,7 +86,7 @@
       </td>
       % my $klass = $rank->rank && $rank->rank == $rank->tobe ? ' success' : '';
       <td class="text-right<%= $klass %>">
-        <samp><%= $rank->rank || 'Unknown' %></samp>
+        <samp><%= $rank->rank || 'Unknown(' . $adkeyword->max_depth . ')' %></samp>
       </td>
       <td class="text-right">
         <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_interval" data-title="가감액" data-pk="1">
