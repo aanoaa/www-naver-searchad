@@ -6,7 +6,7 @@ use Mojo::Log;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(find_rank);
+@EXPORT_OK = qw(find_rank enqueue);
 
 our $BASE_URL = 'http://search.naver.com/search.naver';
 
@@ -49,6 +49,46 @@ sub find_rank {
     }
 
     return;
+}
+
+sub enqueue {
+    my ( $dirq, $r ) = @_;
+
+    return unless $dirq;
+    return unless $r;   # $r is SearchAd::Schema::Result::Rank
+
+    my $tobe = $r->tobe;
+    my $max  = $r->bid_max;
+    my $min  = $r->bid_min;
+    my $int  = $r->bid_interval;
+    my $amt  = $r->bid_amt;
+
+    return unless $tobe or $max or $min or $int or $amt;
+
+    my $adkeyword = $r->adkeyword;
+    my $adgroup   = $adkeyword->adgroup;
+    my $campaign  = $adgroup->campaign;
+    my $user      = $campaign->user;
+    my $url       = $adgroup->target->url;
+    $url =~ s{^https?://}{};
+    my $rank = find_rank( $adkeyword->name, $url ) || $adkeyword->max_depth + 1;
+    $r->update( { rank => $rank } );
+
+    next if $rank == $tobe;
+
+    $int *= -1 if $rank < $tobe;
+
+    my $distance = $tobe - $rank;
+    $distance *= -1 if $distance < 0;
+    $amt = $amt + $int * $distance;
+    $amt = $min if $amt < $min;
+    $amt = $max if $amt > $max;
+
+    my $str = sprintf '%s:%s:%s:%s:%s', $r->id, $amt, $adkeyword->str_id, $adgroup->str_id, $user->id;
+    my $msg = sprintf 'rank_id(%s):bidAmt(%s):keyword_id(%s):group_id(%s):user_id(%s)', $r->id, $amt, $adkeyword->str_id,
+        $adgroup->str_id, $user->id;
+    print STDERR '[' . localtime . '] [debug] ' . "$msg\n";
+    $dirq->add($str);
 }
 
 1;
