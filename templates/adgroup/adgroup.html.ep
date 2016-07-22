@@ -68,13 +68,14 @@
           <%= $keyword %>
         </a>
       </td>
-      <td class="text-right"><samp><%= commify $rank->bid_amt %></samp></td>
-      <td class="text-right">
+      % my $limit = $rank->bid_amt == $rank->bid_max || $rank->bid_amt == $rank->bid_min;
+      <td class="text-right<%= $limit ? ' warning' : '' %>"><samp><%= commify $rank->bid_amt %></samp></td>
+      <td class="text-right<%= $rank->bid_amt == $rank->bid_max ? ' warning' : '' %>">
         <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_max" data-title="최대가" data-pk="1">
           %= $rank->bid_max
         </a>
       </td>
-      <td class="text-right">
+      <td class="text-right<%= $rank->bid_amt == $rank->bid_min ? ' warning' : '' %>">
         <a href="#" class="rank-editable" data-type="text" data-url="<%= $url %>" data-name="bid_min" data-title="최소가" data-pk="1">
           %= $rank->bid_min
         </a>
