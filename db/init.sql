@@ -105,3 +105,16 @@ CREATE TABLE adkeyword (
     CONSTRAINT fk_keyword1 FOREIGN KEY (adgroup_id) REFERENCES adgroup (id) ON DELETE CASCADE,
     CONSTRAINT fk_keyword2 FOREIGN KEY (rank_id)    REFERENCES rank (id)    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE bidlog (
+    id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    adkeyword_id INT UNSIGNED NOT NULL,
+    before_amt   INT NOT NULL,
+    after_amt    INT NOT NULL,
+    before_rank  INT NOT NULL,
+    after_rank   INT NOT NULL,
+    create_date  DATETIME DEFAULT NULL,
+
+    PRIMARY KEY (`id`),
+    CONSTRAINT fk_bidlog1 FOREIGN KEY (adkeyword_id) REFERENCES adkeyword (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -175,6 +175,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "RESTRICT" },
 );
 
+=head2 bidlogs
+
+Type: has_many
+
+Related object: L<SearchAd::Schema::Result::Bidlog>
+
+=cut
+
+__PACKAGE__->has_many(
+  "bidlogs",
+  "SearchAd::Schema::Result::Bidlog",
+  { "foreign.adkeyword_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 rank
 
 Type: belongs_to
@@ -191,8 +206,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 09:53:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UHGDLutaFxz1Vf+tlfaXFw
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 10:27:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Js6GTuFYvyPHOqzTpzztDQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
