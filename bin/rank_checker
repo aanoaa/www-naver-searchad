@@ -39,14 +39,12 @@ while (1) {
         my $user      = $campaign->user;
         my $url       = $adgroup->target->url;
         $url =~ s{^https?://}{};
-        my $rank = find_rank( $adkeyword->name, $url ) || 0;
+        my $rank = find_rank( $adkeyword->name, $url ) || $adkeyword->max_depth + 1;
         $r->update( { rank => $rank } );
 
         next if $rank == $tobe;
 
-        if ($rank) {
-            $int *= -1 if $rank < $tobe;
-        }
+        $int *= -1 if $rank < $tobe;
 
         my $distance = $tobe - $rank;
         $distance *= -1 if $distance < 0;
