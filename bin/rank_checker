@@ -33,7 +33,7 @@ while (1) {
 
         return unless $tobe or $max or $min or $int or $amt;
 
-        my $adkeyword = $r->adkeywords->next;
+        my $adkeyword = $r->adkeyword;
         my $adgroup   = $adkeyword->adgroup;
         my $campaign  = $adgroup->campaign;
         my $user      = $campaign->user;
