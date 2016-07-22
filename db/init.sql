@@ -96,6 +96,7 @@ CREATE TABLE adkeyword (
     rank_id     INT UNSIGNED NOT NULL,
     str_id      VARCHAR(64) NOT NULL,
     name        VARCHAR(64) NOT NULL,
+    max_depth   INT NOT NULL,
     create_date DATETIME DEFAULT NULL,
     update_date DATETIME DEFAULT NULL,
 

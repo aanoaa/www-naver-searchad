@@ -61,6 +61,11 @@ __PACKAGE__->table("adkeyword");
   is_nullable: 0
   size: 64
 
+=head2 max_depth
+
+  data_type: 'integer'
+  is_nullable: 0
+
 =head2 create_date
 
   data_type: 'datetime'
@@ -106,6 +111,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 64 },
   "name",
   { data_type => "varchar", is_nullable => 0, size => 64 },
+  "max_depth",
+  { data_type => "integer", is_nullable => 0 },
   "create_date",
   {
     data_type => "datetime",
@@ -170,8 +177,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fkp7ZDz6s6e/RuJYqkvxjw
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 09:40:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z137scYcWJzYqZuH54zz5g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
