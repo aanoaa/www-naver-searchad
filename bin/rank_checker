@@ -55,7 +55,7 @@ while (1) {
         $amt = $max if $amt > $max;
 
         my $str = sprintf '%s:%s:%s:%s:%s', $r->id, $amt, $adkeyword->str_id, $adgroup->str_id, $user->id;
-        print STDERR "$str\n";
+        print '[' . localtime . '] [debug] ' . "$str\n";
         $dirq->add($str);
     }
 
