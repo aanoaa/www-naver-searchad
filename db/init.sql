@@ -111,8 +111,7 @@ CREATE TABLE bidlog (
     adkeyword_id INT UNSIGNED NOT NULL,
     before_amt   INT NOT NULL,
     after_amt    INT NOT NULL,
-    before_rank  INT NOT NULL,
-    after_rank   INT NOT NULL,
+    rank         INT NOT NULL,
     create_date  DATETIME DEFAULT NULL,
 
     PRIMARY KEY (`id`),
