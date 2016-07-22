@@ -8,6 +8,8 @@ use Try::Tiny;
 
 has schema => sub { shift->app->schema };
 
+our $ROWS = 50;
+
 =head1 METHODS
 
 =head2 adgroup_id
@@ -41,7 +43,7 @@ sub adgroup {
     my $adgroup = $self->stash('adgroup');
     my $p       = $self->param('p') || 1;
 
-    my $attr = { page => $p, rows => 20 };
+    my $attr = { page => $p, rows => $ROWS };
 
     $self->stash( adkeywords => undef, pageset => undef );
     my $keyword_rs = $self->schema->resultset('Adkeyword');
@@ -111,7 +113,7 @@ sub update_ranks {
     my $adgroup = $self->stash('adgroup');
     my $p       = $self->param('p') || 1;
 
-    my $attr = { page => $p, rows => 20 };
+    my $attr = { page => $p, rows => $ROWS };
 
     my $v = $self->validation;
     $v->optional('tobe')->size( 1, 2 );
@@ -124,7 +126,9 @@ sub update_ranks {
     }
 
     my $input = $v->input;
-    map { delete $input->{$_} } qw/name pk value p/; # delete x-editable params
+    map { delete $input->{$_} } qw/name pk value p force/; # delete x-editable params
+
+    $attr = undef if $self->param('force');
 
     my $ranks = $adgroup->adkeywords->search_related( 'rank', undef, $attr );
     my $guard = $self->schema->txn_scope_guard;
