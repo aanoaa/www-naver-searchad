@@ -49,6 +49,20 @@
         %= content
       </div>
     </div>
+
+    <footer class="page-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <p>
+              &copy; 2016 Silex, Inc.
+            </p>
+          </div>
+          <div class="col-md-4"></div>
+          <div class="col-md-3"></div>
+        </div>
+      </div>
+    </footer>
     <script src="/assets/components/jquery/dist/jquery.min.js"></script>
     <script src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/assets/components/underscore/underscore.js"></script>
