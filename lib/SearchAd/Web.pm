@@ -80,6 +80,7 @@ sub _private_routes {
 
     my $adkeyword = $adkeywords->under('/:adkeyword_id')->to('adkeyword#adkeyword_id');
     $adkeyword->get('/')->to('adkeyword#adkeyword');
+    $adkeyword->put('/')->to('adkeyword#update_adkeyword');
 
     $r->put('/ranks/:rank_id')->to('rank#update_rank');
 }

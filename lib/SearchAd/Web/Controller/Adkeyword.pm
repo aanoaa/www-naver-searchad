@@ -2,8 +2,11 @@ package SearchAd::Web::Controller::Adkeyword;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
+use Directory::Queue;
+use WWW::Naver::SearchAd::Rank qw/enqueue/;
 
 has schema => sub { shift->app->schema };
+has dirq => sub { Directory::Queue->new( path => '/tmp/searchad' ) };
 
 =head1 METHODS
 
@@ -52,6 +55,20 @@ sub adkeyword {
     );
 
     return $self->render( logs => $rs, pageset => $pageset );
+}
+
+=head2 update_adkeyword
+
+    PUT /adkeywords/:adkeyword_id
+
+=cut
+
+sub update_adkeyword {
+    my $self      = shift;
+    my $adkeyword = $self->stash('adkeyword');
+
+    enqueue( $self->dirq, $adkeyword->rank );
+    $self->render( json => { $adkeyword->get_columns } );
 }
 
 1;
