@@ -7,8 +7,57 @@
 
 <h2>
   %= $adkeyword->name
+  <small>
+    <button data-url="<%= url_for %>" class="btn btn-success btn-sm btn-refresh" title="Update now" type="button">
+      <i class="fa fa-refresh" aria-hidden="true"></i>
+    </button>
+  </small>
 </h2>
 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+% my $rank = $adkeyword->rank;
+<table class="table">
+  <thead>
+    <tr>
+      <th>on/off</th>
+      <th>키워드</th>
+      <th>입찰가</th>
+      <th>최대가</th>
+      <th>최소가</th>
+      <th>목표순위</th>
+      <th>가감액</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        % if ($rank->on_off) {
+        <span class="label label-success">on</span>
+        % } else {
+        <span class="label label-default">off</span>
+        % }
+      </td>
+      <td>
+        %= $adkeyword->name
+      </td>
+      <td>
+        <samp><%= commify $rank->bid_amt %></samp>
+      </td>
+      <td>
+        <samp><%= commify $rank->bid_max %></samp>
+      </td>
+      <td>
+        <samp><%= commify $rank->bid_min %></samp>
+      </td>
+      <td>
+        <samp><%= $rank->tobe %></samp>
+      </td>
+      <td>
+        <samp><%= commify $rank->bid_interval %></samp>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <hr>
 
