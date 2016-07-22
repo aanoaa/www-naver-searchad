@@ -151,24 +151,24 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 adkeywords
+=head2 adkeyword
 
-Type: has_many
+Type: might_have
 
 Related object: L<SearchAd::Schema::Result::Adkeyword>
 
 =cut
 
-__PACKAGE__->has_many(
-  "adkeywords",
+__PACKAGE__->might_have(
+  "adkeyword",
   "SearchAd::Schema::Result::Adkeyword",
   { "foreign.rank_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-21 21:55:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ciS2maLNJxwAt648WlE/Jw
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 09:53:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxyL6a7iJW5i0Bps7+EVzw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

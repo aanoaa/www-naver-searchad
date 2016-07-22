@@ -101,6 +101,7 @@ CREATE TABLE adkeyword (
     update_date DATETIME DEFAULT NULL,
 
     PRIMARY KEY (`id`),
+    UNIQUE KEY (`rank_id`),
     CONSTRAINT fk_keyword1 FOREIGN KEY (adgroup_id) REFERENCES adgroup (id) ON DELETE CASCADE,
     CONSTRAINT fk_keyword2 FOREIGN KEY (rank_id)    REFERENCES rank (id)    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

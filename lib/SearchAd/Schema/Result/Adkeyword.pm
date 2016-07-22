@@ -144,6 +144,20 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<rank_id>
+
+=over 4
+
+=item * L</rank_id>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("rank_id", ["rank_id"]);
+
 =head1 RELATIONS
 
 =head2 adgroup
@@ -177,8 +191,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 09:40:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z137scYcWJzYqZuH54zz5g
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 09:53:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UHGDLutaFxz1Vf+tlfaXFw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
