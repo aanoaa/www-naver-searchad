@@ -3,6 +3,7 @@ package WWW::Naver::SearchAd::Rank;
 use Encode qw/decode_utf8/;
 use HTTP::Tiny;
 use Mojo::Log;
+use IO::Socket::Socks::Wrapper qw(wrap_connection);
 
 require Exporter;
 @ISA       = qw(Exporter);
@@ -13,18 +14,35 @@ our $BASE_URL = 'http://search.naver.com/search.naver';
 my $log = Mojo::Log->new;
 
 sub find_rank {
-    my ( $keyword, $find ) = @_;
+    my ( $keyword, $find, $socks ) = @_;
     return unless $find;
     return unless $keyword;
 
-    my $http = HTTP::Tiny->new(
-        agent           => 'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.04',
-        default_headers => {
-            accept            => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language' => 'en-US,en;q=0.5',
-            'DNT'             => 1
-        }
-    );
+    my $agent           = 'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.04';
+    my $default_headers = {
+        accept            => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language' => 'en-US,en;q=0.5',
+        'DNT'             => 1
+    };
+
+    my $http;
+    if ($socks) {
+        $log->debug("Socks proxy: $socks");
+        my ( $addr, $port ) = split /:/, $socks;
+        $http = wrap_connection(
+            HTTP::Tiny->new( agent => $agent, default_headers => $default_headers ),
+            {
+                ProxyAddr    => $addr,
+                ProxyPort    => $port,
+                SocksVersion => 5,
+                Timeout      => 15
+            }
+        );
+    }
+    else {
+        $http = HTTP::Tiny->new( agent => $agent, default_headers => $default_headers );
+    }
+
     my $params = $http->www_form_urlencode( { query => $keyword, where => 'ad', ie => 'utf8' } );
     my $url = "$BASE_URL?$params";
 
@@ -52,7 +70,7 @@ sub find_rank {
 }
 
 sub enqueue {
-    my ( $dirq, $r ) = @_;
+    my ( $dirq, $r, $socks ) = @_;
 
     return unless $dirq;
     return unless $r;   # $r is SearchAd::Schema::Result::Rank
@@ -71,7 +89,7 @@ sub enqueue {
     my $user      = $campaign->user;
     my $url       = $adgroup->target->url;
     $url =~ s{^https?://}{};
-    my $rank = find_rank( $adkeyword->name, $url ) || 0;
+    my $rank = find_rank( $adkeyword->name, $url, $socks ) || 0;
     $r->update( { rank => $rank } );
     next if $rank == $tobe;
 
