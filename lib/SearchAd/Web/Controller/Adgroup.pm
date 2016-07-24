@@ -118,6 +118,8 @@ sub update_ranks {
     my $v = $self->validation;
     $v->optional('tobe')->size( 1, 2 );
     $v->optional('on_off');
+    $v->optional('bid_max')->size( 2, 5 );
+    $v->optional('bid_min')->size( 2, 5 );
     $v->optional('bid_interval')->size( 2, 5 );
 
     if ( $v->has_error ) {

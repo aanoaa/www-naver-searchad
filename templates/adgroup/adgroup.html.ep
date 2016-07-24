@@ -41,8 +41,18 @@
       </th>
       <th>키워드</th>
       <th>입찰가</th>
-      <th>최대가</th>
-      <th>최소가</th>
+      <th>
+        최대가
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="bid_max" data-title="최대가" data-pk="1">
+          0
+        </a>
+      </th>
+      <th>
+        최소가
+        <a href="#" class="rank-editable" data-type="text" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="bid_min" data-title="최소가" data-pk="1">
+          0
+        </a>
+      </th>
       <th>
         목표순위
         <a href="#" class="rank-rank-editable" data-type="select" data-url="<%= url_with('/adgroups/' . $adgroup->id . '/ranks') %>" data-name="tobe" data-title="목표순위" data-pk="1">
