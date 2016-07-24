@@ -8,9 +8,8 @@ requires 'HTTP::Tiny';
 requires 'JSON';
 requires 'Mojolicious::Plugin::Number::Commify';
 requires 'Moo';
-requires 'Pod::Usage';
-requires 'Try::Tiny';
-
-requires 'Path::Tiny';
 requires 'Parallel::ForkManager';
+requires 'Path::Tiny';
+requires 'Pod::Usage';
 requires 'Redis';
+requires 'Try::Tiny';
