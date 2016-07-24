@@ -23,11 +23,11 @@ my $schema  = SearchAd::Schema->connect(
     }
 );
 
-my @socks = path("$Bin/../socks.list")->lines;
-map { chomp } @socks;
+my @socks = path("$Bin/../socks.list")->lines( { chomp => 1 } );
+@socks = grep { /^[^#]/ } @socks;
 
 my $redis = Redis->new;
-map { $redis->lpush( 'searchad:socks', $_ ) } @socks;
+$redis->lpush( 'searchad:socks', @socks );
 
 my $pm = Parallel::ForkManager->new( scalar @socks );
 my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
@@ -38,7 +38,13 @@ while (1) {
     LOOPS:
     while ( my $r = $rs->next ) {
         $pm->start and next LOOPS;
-        while ( my $socks = $redis->lpop('searchad:socks') ) {
+        while (1) {
+            my $socks = $redis->lpop('searchad:socks');
+            unless ($socks) {
+                sleep(1);
+                next;
+            }
+
             enqueue( $dirq, $r, $socks );
             $redis->lpush( 'searchad:socks', $socks );
             $pm->finish;
