@@ -73,7 +73,7 @@ sub find_rank {
     my $rank    = 1;
     while ( $content =~ m{<a class="lnk_url"[^>]+>(.*)</a>}gc ) {
         my $url = $1;
-        return ( $res->{success}, $rank ) if $1 eq $find;
+        return ( $res->{success}, $rank ) if $url eq $find;
         $rank++;
     }
 
