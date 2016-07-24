@@ -13,6 +13,15 @@ our $BASE_URL = 'http://search.naver.com/search.naver';
 
 my $log = Mojo::Log->new;
 
+=head1 FUNCTIONS
+
+=head2 find_rank($keyword, $find, $socks?)
+
+    my ($is_success, $rank) = find_rank('제주도여행', 'www.jejudo.co.kr');
+    my ($is_success, $rank) = find_rank('제주도여행', 'www.jejudo.co.kr', 'localhost:9150');    # use socks proxy
+
+=cut
+
 sub find_rank {
     my ( $keyword, $find, $socks ) = @_;
     return unless $find;
@@ -51,22 +60,22 @@ sub find_rank {
     my $res = $http->get($url);
 
     unless ( $res->{success} ) {
-        $log->error("Failed");
+        $log->error("! Failed: $keyword");
         $log->error("! $res->{reason}");
-        return;
+        return ( $res->{success}, 0 );
     }
 
-    $log->debug("OK");
+    $log->debug("OK: $keyword");
 
     my $content = decode_utf8( $res->{content} );
     my $rank    = 1;
     while ( $content =~ m{<a class="lnk_url"[^>]+>(.*)</a>}gc ) {
         my $url = $1;
-        return $rank if $1 eq $find;
+        return ( $res->{success}, $rank ) if $1 eq $find;
         $rank++;
     }
 
-    return;
+    return ( $res->{success}, 0 );
 }
 
 sub enqueue {
@@ -89,9 +98,10 @@ sub enqueue {
     my $user      = $campaign->user;
     my $url       = $adgroup->target->url;
     $url =~ s{^https?://}{};
-    my $rank = find_rank( $adkeyword->name, $url, $socks ) || 0;
+    my ( $success, $rank ) = find_rank( $adkeyword->name, $url, $socks );
     $r->update( { rank => $rank } );
-    next if $rank == $tobe;
+    return unless $success;
+    return if $rank == $tobe;
 
     $rank = $adkeyword->max_depth + 1 unless $rank;
     $int *= -1 if $rank < $tobe;
@@ -105,7 +115,7 @@ sub enqueue {
     my $str = sprintf '%s:%s:%s:%s:%s', $r->id, $amt, $adkeyword->str_id, $adgroup->str_id, $user->id;
     my $msg = sprintf 'rank_id(%s):bidAmt(%s):keyword_id(%s):group_id(%s):user_id(%s)', $r->id, $amt, $adkeyword->str_id,
         $adgroup->str_id, $user->id;
-    print STDERR '[' . localtime . '] [debug] ' . "$msg\n";
+    $log->debug($msg);
     $dirq->add($str);
 }
 
