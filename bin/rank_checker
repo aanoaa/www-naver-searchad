@@ -4,11 +4,11 @@ use warnings;
 
 use Directory::Queue;
 use FindBin qw($Bin);
+use Parallel::ForkManager;
 use Path::Tiny;
+use Redis;
 use SearchAd::Schema;
 use WWW::Naver::SearchAd::Rank qw/enqueue/;
-use Parallel::ForkManager;
-use Redis;
 
 STDOUT->autoflush(1);
 
@@ -27,6 +27,7 @@ my @socks = path("$Bin/../socks.list")->lines( { chomp => 1 } );
 @socks = grep { /^[^#]/ } @socks;
 
 my $redis = Redis->new;
+$redis->del('searchad:socks');
 $redis->lpush( 'searchad:socks', @socks );
 
 my $pm = Parallel::ForkManager->new( scalar @socks );
@@ -46,7 +47,7 @@ while (1) {
             }
 
             enqueue( $dirq, $r, $socks );
-            $redis->lpush( 'searchad:socks', $socks );
+            $redis->rpush( 'searchad:socks', $socks );
             $pm->finish;
             last;
         }
