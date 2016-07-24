@@ -10,3 +10,7 @@ requires 'Mojolicious::Plugin::Number::Commify';
 requires 'Moo';
 requires 'Pod::Usage';
 requires 'Try::Tiny';
+
+requires 'Path::Tiny';
+requires 'Parallel::ForkManager';
+requires 'Redis';

@@ -3,11 +3,16 @@ use strict;
 use warnings;
 
 use Directory::Queue;
+use FindBin qw($Bin);
+use Parallel::ForkManager;
+use Path::Tiny;
+use Redis;
 use SearchAd::Schema;
 use WWW::Naver::SearchAd::Rank qw/enqueue/;
-use FindBin qw($Bin);
 
 STDOUT->autoflush(1);
+
+our $REDIS_KEY_SEARCHAD_SOCKS = 'searchad:socks';
 
 my $config  = require "$Bin/../searchad.conf";
 my $db_conf = $config->{database};
@@ -20,12 +25,34 @@ my $schema  = SearchAd::Schema->connect(
     }
 );
 
+my @socks = path("$Bin/../socks.list")->lines( { chomp => 1 } );
+@socks = grep { /^[^#]/ } @socks;
+
+my $redis = Redis->new;
+$redis->del($REDIS_KEY_SEARCHAD_SOCKS);
+$redis->rpush( $REDIS_KEY_SEARCHAD_SOCKS, @socks );
+
+my $pm = Parallel::ForkManager->new( scalar @socks );
 my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
 
 while (1) {
     my $rs = $schema->resultset('Rank')->search( { on_off => 1 } );
+
+    LOOPS:
     while ( my $r = $rs->next ) {
-        enqueue( $dirq, $r );
+        $pm->start and next LOOPS;
+        while (1) {
+            my $socks = $redis->lpop('searchad:socks');
+            unless ($socks) {
+                sleep(1);
+                next;
+            }
+
+            enqueue( $dirq, $r, $socks );
+            $redis->rpush( 'searchad:socks', $socks );
+            $pm->finish;
+            last;
+        }
     }
 
     sleep(120);
