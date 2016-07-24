@@ -80,11 +80,17 @@ sub find_rank {
     return ( $res->{success}, 0 );
 }
 
+=head2 enqueue($dirq, $rank, $socks?)
+
+TODO: return code 를 정의하자
+
+=cut
+
 sub enqueue {
     my ( $dirq, $r, $socks ) = @_;
 
-    return unless $dirq;
-    return unless $r;   # $r is SearchAd::Schema::Result::Rank
+    return 100 unless $dirq;
+    return 100 unless $r;   # $r is SearchAd::Schema::Result::Rank
 
     my $tobe = $r->tobe;
     my $max  = $r->bid_max;
@@ -92,7 +98,7 @@ sub enqueue {
     my $int  = $r->bid_interval;
     my $amt  = $r->bid_amt;
 
-    return unless $tobe or $max or $min or $int or $amt;
+    return 100 unless $tobe or $max or $min or $int or $amt;
 
     my $adkeyword = $r->adkeyword;
     my $adgroup   = $adkeyword->adgroup;
@@ -103,7 +109,7 @@ sub enqueue {
     my ( $success, $rank ) = find_rank( $adkeyword->name, $url, $socks );
     $r->update( { rank => $rank } );
     return unless $success;
-    return if $rank == $tobe;
+    return 100 if $rank == $tobe;
 
     $rank = $adkeyword->max_depth + 1 unless $rank;
     $int *= -1 if $rank < $tobe;
@@ -119,6 +125,7 @@ sub enqueue {
         $adgroup->str_id, $user->id;
     $log->debug($msg);
     $dirq->add($str);
+    return 200;
 }
 
 1;

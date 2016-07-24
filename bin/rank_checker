@@ -13,6 +13,7 @@ use WWW::Naver::SearchAd::Rank qw/enqueue/;
 STDOUT->autoflush(1);
 
 our $REDIS_KEY_SEARCHAD_SOCKS = 'searchad:socks';
+our $MAX_PROCESS              = 30;
 
 my $config  = require "$Bin/../searchad.conf";
 my $db_conf = $config->{database};
@@ -32,7 +33,10 @@ my $redis = Redis->new;
 $redis->del($REDIS_KEY_SEARCHAD_SOCKS);
 $redis->rpush( $REDIS_KEY_SEARCHAD_SOCKS, @socks );
 
-my $pm = Parallel::ForkManager->new( scalar @socks );
+my $process = scalar @socks;
+$process = $MAX_PROCESS if $process > $MAX_PROCESS;
+
+my $pm = Parallel::ForkManager->new($process);
 my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
 
 while (1) {
@@ -48,8 +52,8 @@ while (1) {
                 next;
             }
 
-            enqueue( $dirq, $r, $socks );
-            $redis->rpush( 'searchad:socks', $socks );
+            my $success = enqueue( $dirq, $r, $socks );
+            $redis->rpush( 'searchad:socks', $socks ) if $success;
             $pm->finish;
             last;
         }
