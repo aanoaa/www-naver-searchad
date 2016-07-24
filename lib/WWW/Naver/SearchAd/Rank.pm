@@ -28,13 +28,13 @@ sub find_rank {
     my $http;
     if ($socks) {
         $log->debug("Socks proxy: $socks");
-        my ( $addr, $port ) = split /:/, $socks;
+        my ( $addr, $port, $version ) = split /:/, $socks;
         $http = wrap_connection(
             HTTP::Tiny->new( agent => $agent, default_headers => $default_headers ),
             {
                 ProxyAddr    => $addr,
                 ProxyPort    => $port,
-                SocksVersion => 5,
+                SocksVersion => $version || 5,
                 Timeout      => 15
             }
         );
