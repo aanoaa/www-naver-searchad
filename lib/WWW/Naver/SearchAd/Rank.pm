@@ -62,10 +62,12 @@ sub find_rank {
     unless ( $res->{success} ) {
         $log->error("! Failed: $keyword");
         $log->error("! $res->{reason}");
+        $log->error("! $socks") if $socks;
         return ( $res->{success}, 0 );
     }
 
     $log->debug("OK: $keyword");
+    $log->debug("$socks") if $socks;
 
     my $content = decode_utf8( $res->{content} );
     my $rank    = 1;
