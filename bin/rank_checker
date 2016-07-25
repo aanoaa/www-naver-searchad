@@ -45,8 +45,10 @@ while (1) {
     LOOPS:
     while ( my $r = $rs->next ) {
         $pm->start and next LOOPS;
+        srand();
         my $rand = int( rand(10) ) + 20;
-        sleep($rand);
+        sleep( $rand++ );
+
         while (1) {
             my $socks = $redis->lpop('searchad:socks');
             unless ($socks) {
