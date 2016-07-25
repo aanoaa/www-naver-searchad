@@ -27,11 +27,13 @@ sub find_rank {
     return unless $find;
     return unless $keyword;
 
-    my $agent           = 'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.04';
+    my $agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
     my $default_headers = {
         accept            => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language' => 'en-US,en;q=0.5',
-        'DNT'             => 1
+        'Accept-Language' => 'ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4',
+        'DNT'             => 1,
+        'Cookie' =>
+            'NNB=7PIBCDEKKANVO; npic=/B/V6gSRDBZ4wrEXxGYyS6di4cd3EiAGdja1uzl9SL9DVotIP2cJ/vnAEMEKx8f8CA==; _ga=GA1.2.1182011555.1462856106; nx_ssl=2; _naver_usersession_=NGRVDFFyXDy7Q5Y5zvJWaA==; page_uid=SHTAddoRR1Kssv0/XdVssssssud-259419; nx_res=s1%3D535E%2Cs2%3DB981%2Cac%3D8169',
     };
 
     my $http;
