@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Directory::Queue;
+use FindBin qw($Bin);
+use SearchAd::Schema;
+use WWW::Naver::SearchAd::Rank qw/enqueue/;
+
+STDOUT->autoflush(1);
+
+our $REDIS_KEY_SEARCHAD_SOCKS = 'searchad:socks';
+our $MAX_PROCESS              = 30;
+
+my $config  = require "$Bin/../searchad.conf";
+my $db_conf = $config->{database};
+my $schema  = SearchAd::Schema->connect(
+    {
+        dsn      => $db_conf->{dsn},
+        user     => $db_conf->{user},
+        password => $db_conf->{pass},
+        %{ $db_conf->{opts} },
+    }
+);
+
+my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
+
+while (1) {
+    my $rs = $schema->resultset('Rank')->search( { on_off => 1 } );
+
+    while ( my $r = $rs->next ) {
+        enqueue( $dirq, $r );
+        my $rand = int( rand(10) ) + 20;
+        sleep($rand);
+    }
+}
