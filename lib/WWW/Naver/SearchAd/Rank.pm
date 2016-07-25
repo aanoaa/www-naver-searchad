@@ -1,9 +1,10 @@
 package WWW::Naver::SearchAd::Rank;
 
 use Encode qw/decode_utf8/;
+use Gzip::Faster qw/gunzip/;
 use HTTP::Tiny;
-use Mojo::Log;
 use IO::Socket::Socks::Wrapper qw(wrap_connection);
+use Mojo::Log;
 
 require Exporter;
 @ISA       = qw(Exporter);
@@ -31,9 +32,11 @@ sub find_rank {
     my $default_headers = {
         accept            => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language' => 'ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4',
+        'Accept-Encoding' => 'gzip, deflate',
         'DNT'             => 1,
         'Cookie' =>
-            'NNB=7PIBCDEKKANVO; npic=/B/V6gSRDBZ4wrEXxGYyS6di4cd3EiAGdja1uzl9SL9DVotIP2cJ/vnAEMEKx8f8CA==; _ga=GA1.2.1182011555.1462856106; nx_ssl=2; _naver_usersession_=NGRVDFFyXDy7Q5Y5zvJWaA==; page_uid=SHTAddoRR1Kssv0/XdVssssssud-259419; nx_res=s1%3D535E%2Cs2%3DB981%2Cac%3D8169',
+            'NNB=7PIBCDEKKANVO; _ga=GA1.2.1182011555.1462856106; _naver_usersession_=Q8wEtNIduh/XBMdIADI8Ng==; npic=/B/V6gSRDBZ4wrEXxGYyS6di4cd3EiAGdja1uzl9SL9DVotIP2cJ/vnAEMEKx8f8CA==; s1%3D535E%2Cs2%3DB981%2Cac%3D8169; nx_ssl=2; SHUnvsoRR2dssbeXfndssssssul-194517',
+        'Referer' => 'http://www.naver.com/',
     };
 
     my $http;
@@ -71,8 +74,9 @@ sub find_rank {
     $log->debug("OK: $keyword");
     $log->debug("$socks") if $socks;
 
-    my $content = decode_utf8( $res->{content} );
-    my $rank    = 1;
+    my $content = gunzip( $res->{content} );
+    $content = decode_utf8( $res->{content} );
+    my $rank = 1;
     while ( $content =~ m{<a class="lnk_url"[^>]+>(.*)</a>}gc ) {
         my $url = $1;
         return ( $res->{success}, $rank ) if $url eq $find;

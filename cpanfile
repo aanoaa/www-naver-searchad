@@ -4,6 +4,7 @@ requires 'Directory::Queue';
 requires 'Email::Valid';
 requires 'Encode';
 requires 'Getopt::Long';
+requires 'Gzip::Faster';
 requires 'HTTP::Tiny';
 requires 'JSON';
 requires 'Mojolicious::Plugin::Number::Commify';
