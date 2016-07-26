@@ -40,10 +40,10 @@ my $pm = Parallel::ForkManager->new($max_proc);
 my $dirq = Directory::Queue->new( path => '/tmp/searchad' );
 
 while (1) {
-    my $rs = $schema->resultset('Rank')->search( { on_off => 1 } );
+    my @ranks = $schema->resultset('Rank')->search( { on_off => 1 } );
 
     LOOPS:
-    while ( my $r = $rs->next ) {
+    for my $r (@ranks) {
         $pm->start and next LOOPS;
         srand();
         my $rand = int( rand(10) ) + 20;
