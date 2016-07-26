@@ -54,7 +54,17 @@ sub adkeyword {
         }
     );
 
-    return $self->render( logs => $rs, pageset => $pageset );
+    $self->respond_to(
+        html => { logs => $rs, pageset => $pageset },
+        json => sub {
+            my @logs;
+            while ( my $log = $rs->next ) {
+                push @logs, { $log->get_columns };
+            }
+
+            $self->render( json => { adkeyword => { $adkeyword->get_columns }, logs => \@logs } );
+        }
+    );
 }
 
 =head2 update_adkeyword

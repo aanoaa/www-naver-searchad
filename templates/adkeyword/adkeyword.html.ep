@@ -2,7 +2,10 @@
 % title $adkeyword->name, jses => [
 %   '/assets/components/jquery-timeago/jquery.timeago.js',
 %   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
+%   '/assets/components/chartist/dist/chartist.min.js',
 %   '/assets/dist/js/adkeyword.min.js'
+% ], csses => [
+%   '/assets/components/chartist/dist/chartist.min.css'
 % ];
 
 <h2>
@@ -58,6 +61,10 @@
     </tr>
   </tbody>
 </table>
+
+<hr>
+
+<div class="ct-chart"></div>
 
 <hr>
 
