@@ -73,7 +73,7 @@ sub find_rank {
     $log->debug("$socks") if $socks;
 
     my $content = gunzip( $res->{content} );
-    $content = decode_utf8( $res->{content} );
+    $content = decode_utf8($content);
     my $rank = 1;
     while ( $content =~ m{<a class="lnk_url"[^>]+>(.*)</a>}gc ) {
         my $url = $1;
