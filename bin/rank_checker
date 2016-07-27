@@ -8,7 +8,7 @@ use Parallel::ForkManager;
 use Path::Tiny;
 use Redis;
 use SearchAd::Schema;
-use WWW::Naver::SearchAd::Rank qw/enqueue/;
+use WWW::Naver::SearchAd::Rank qw/enqueue $RANK_OK/;
 
 STDOUT->autoflush(1);
 
@@ -57,7 +57,21 @@ while (1) {
             }
 
             my $success = enqueue( $dirq, $r, $socks );
-            $redis->rpush( 'searchad:socks', $socks ) if $success;
+            if ($success) {
+                $redis->rpush( 'searchad:socks', $socks );
+                if ( $success == $RANK_OK ) {
+                    my $adkeyword = $r->adkeyword;
+                    $schema->resultset('Bidlog')->create(
+                        {
+                            adkeyword_id => $adkeyword->id,
+                            before_amt   => $r->bid_amt,
+                            after_amt    => $r->bid_amt,
+                            rank         => $r->rank,
+                            tobe         => $r->tobe,
+                        }
+                    );
+                }
+            }
             $pm->finish;
             last;
         }
