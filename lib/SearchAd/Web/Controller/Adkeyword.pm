@@ -55,7 +55,10 @@ sub adkeyword {
     );
 
     $self->respond_to(
-        html => { logs => $rs, pageset => $pageset },
+        html => {
+            logs    => $rs,
+            pageset => $pageset,
+        },
         json => sub {
             my @logs;
             while ( my $log = $rs->next ) {
@@ -63,7 +66,12 @@ sub adkeyword {
             }
 
             $self->render(
-                json => { adkeyword => { $adkeyword->get_columns }, rank => { $adkeyword->rank->get_columns }, logs => \@logs } );
+                json => {
+                    adkeyword => { $adkeyword->get_columns },
+                    rank      => { $adkeyword->rank->get_columns },
+                    logs      => \@logs
+                }
+            );
         }
     );
 }
