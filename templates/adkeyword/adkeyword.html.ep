@@ -41,7 +41,10 @@
         % }
       </td>
       <td>
-        %= $adkeyword->name
+        <a href="https://search.naver.com/search.naver?query=<%= $adkeyword->name %>" target="_blank" class="btn btn-sm btn-link">
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+          %= $adkeyword->name
+        </a>
       </td>
       <td>
         <samp><%= commify $rank->bid_amt %></samp>
