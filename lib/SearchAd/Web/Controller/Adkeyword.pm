@@ -62,7 +62,8 @@ sub adkeyword {
                 push @logs, { $log->get_columns };
             }
 
-            $self->render( json => { adkeyword => { $adkeyword->get_columns }, logs => \@logs } );
+            $self->render(
+                json => { adkeyword => { $adkeyword->get_columns }, rank => { $adkeyword->rank->get_columns }, logs => \@logs } );
         }
     );
 }

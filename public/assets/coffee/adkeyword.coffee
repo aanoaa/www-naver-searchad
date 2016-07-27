@@ -18,17 +18,20 @@ $ ->
     success: (data, textStatus, jqXHR) ->
       labels = []
       ranks = []
+      tobe = []
       logs = data.logs
       adkeyword = data.adkeyword
+      ranking = data.rank
       max_depth = parseInt(adkeyword.max_depth)
       for log in logs
         labels.unshift log.create_date
         rank = parseInt(log.rank)
         if rank is 0 then ranks.unshift 'Unknown' else ranks.unshift rank
+        tobe.push ranking.tobe
 
       data = {
         labels: labels
-        series: [ranks]
+        series: [ranks, tobe]
       }
 
       options = {
