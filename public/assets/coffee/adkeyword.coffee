@@ -27,11 +27,11 @@ $ ->
         labels.unshift log.create_date
         rank = parseInt(log.rank)
         if rank is 0 then ranks.unshift 'Unknown' else ranks.unshift rank
-        tobe.push ranking.tobe
+        tobe.unshift log.tobe
 
       data = {
         labels: labels
-        series: [ranks, tobe]
+        series: [ranks, tobe, ranks]
       }
 
       options = {
