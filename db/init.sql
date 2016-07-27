@@ -112,6 +112,7 @@ CREATE TABLE bidlog (
     before_amt   INT NOT NULL,
     after_amt    INT NOT NULL,
     rank         INT NOT NULL,
+    tobe         INT NOT NULL,
     create_date  DATETIME DEFAULT NULL,
 
     PRIMARY KEY (`id`),

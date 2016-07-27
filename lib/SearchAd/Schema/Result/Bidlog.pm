@@ -57,6 +57,11 @@ __PACKAGE__->table("bidlog");
   data_type: 'integer'
   is_nullable: 0
 
+=head2 tobe
+
+  data_type: 'integer'
+  is_nullable: 0
+
 =head2 create_date
 
   data_type: 'datetime'
@@ -87,6 +92,8 @@ __PACKAGE__->add_columns(
   "after_amt",
   { data_type => "integer", is_nullable => 0 },
   "rank",
+  { data_type => "integer", is_nullable => 0 },
+  "tobe",
   { data_type => "integer", is_nullable => 0 },
   "create_date",
   {
@@ -128,8 +135,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-22 10:32:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rqxTY2VxrAyI/sGmfAz8Ew
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2016-07-27 15:20:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:II1/QIC1kPOhO8sXQdx6ZA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

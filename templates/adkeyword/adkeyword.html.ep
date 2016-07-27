@@ -78,6 +78,7 @@
       <th>이전 입찰가</th>
       <th>입찰가</th>
       <th>순위</th>
+      <th>목표순위</th>
       <th>시간</th>
     </tr>
   </thead>
@@ -87,6 +88,7 @@
       <td><samp><%= commify $log->before_amt %></samp></td>
       <td><samp><%= commify $log->after_amt %></samp></td>
       <td><samp><%= $log->rank || 'Unknown' %></samp></td>
+      <td><samp><%= $log->tobe %></samp></td>
       <td>
         <abbr class="timeago" title="<%= $log->create_date->ymd %>T<%= $log->create_date->hms %>Z">
           %= $log->create_date
