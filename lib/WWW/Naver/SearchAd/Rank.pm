@@ -8,9 +8,15 @@ use Mojo::Log;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(find_rank enqueue);
+@EXPORT_OK = qw(find_rank enqueue $RANK_OK $RANK_UPDATED $RANK_ERR_ARG $RANK_ERR_FORBIDDEN);
 
 our $BASE_URL = 'http://search.naver.com/search.naver';
+
+## error codes
+our $RANK_OK            = 200;
+our $RANK_UPDATED       = 201;
+our $RANK_ERR_ARG       = 101;
+our $RANK_ERR_FORBIDDEN = undef;
 
 my $log = Mojo::Log->new;
 
@@ -93,8 +99,8 @@ TODO: return code 를 정의하자
 sub enqueue {
     my ( $dirq, $r, $socks ) = @_;
 
-    return 100 unless $dirq;
-    return 100 unless $r;   # $r is SearchAd::Schema::Result::Rank
+    return $RANK_ERR_ARG unless $dirq;
+    return $RANK_ERR_ARG unless $r;   # $r is SearchAd::Schema::Result::Rank
 
     my $tobe = $r->tobe;
     my $max  = $r->bid_max;
@@ -102,7 +108,7 @@ sub enqueue {
     my $int  = $r->bid_interval;
     my $amt  = $r->bid_amt;
 
-    return 100 unless $tobe or $max or $min or $int or $amt;
+    return $RANK_ERR_ARG unless $tobe or $max or $min or $int or $amt;
 
     my $adkeyword = $r->adkeyword;
     my $adgroup   = $adkeyword->adgroup;
@@ -112,8 +118,8 @@ sub enqueue {
     $url =~ s{^https?://}{};
     my ( $success, $rank ) = find_rank( $adkeyword->name, $url, $socks );
     $r->update( { rank => $rank } );
-    return unless $success;
-    return 100 if $rank == $tobe;
+    return $RANK_ERR_FORBIDDEN unless $success;
+    return $RANK_OK if $rank == $tobe;
 
     $rank = $adkeyword->max_depth + 1 unless $rank;
     $int *= -1 if $rank < $tobe;
@@ -129,7 +135,7 @@ sub enqueue {
         $adgroup->str_id, $user->id;
     $log->debug($msg);
     $dirq->add($str);
-    return 200;
+    return $RANK_UPDATED;
 }
 
 1;
