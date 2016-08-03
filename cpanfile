@@ -1,4 +1,6 @@
 requires 'DBD::mysql';
+requires 'DBIx::Class';
+requires 'DBIx::Class::TimeStamp';
 requires 'Data::Pageset';
 requires 'Digest::SHA';
 requires 'Directory::Queue';
