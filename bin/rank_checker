@@ -76,4 +76,6 @@ while (1) {
             last;
         }
     }
+
+    sleep(1);
 }

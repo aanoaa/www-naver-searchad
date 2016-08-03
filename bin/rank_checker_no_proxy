@@ -43,4 +43,6 @@ while (1) {
         my $rand = int( rand(10) ) + 20;
         sleep($rand);
     }
+
+    sleep(1);
 }
