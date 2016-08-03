@@ -1,3 +1,4 @@
+requires 'DBD::mysql';
 requires 'Data::Pageset';
 requires 'Digest::SHA';
 requires 'Directory::Queue';
