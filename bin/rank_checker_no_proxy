@@ -5,7 +5,7 @@ use warnings;
 use Directory::Queue;
 use FindBin qw($Bin);
 use SearchAd::Schema;
-use WWW::Naver::SearchAd::Rank qw/enqueue/;
+use WWW::Naver::SearchAd::Rank qw/enqueue $RANK_OK/;
 
 STDOUT->autoflush(1);
 
@@ -29,7 +29,20 @@ while (1) {
     my $rs = $schema->resultset('Rank')->search( { on_off => 1 } );
 
     while ( my $r = $rs->next ) {
-        enqueue( $dirq, $r );
+        my $success = enqueue( $dirq, $r );
+        if ( $success == $RANK_OK ) {
+            my $adkeyword = $r->adkeyword;
+            $schema->resultset('Bidlog')->create(
+                {
+                    adkeyword_id => $adkeyword->id,
+                    before_amt   => $r->bid_amt,
+                    after_amt    => $r->bid_amt,
+                    rank         => $r->rank,
+                    tobe         => $r->tobe,
+                }
+            );
+        }
+
         my $rand = int( rand(10) ) + 20;
         sleep($rand);
     }
