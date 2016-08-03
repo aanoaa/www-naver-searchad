@@ -9,6 +9,7 @@ requires 'Encode';
 requires 'Getopt::Long';
 requires 'Gzip::Faster';
 requires 'HTTP::Tiny';
+requires 'IO::Socket::Socks::Wrapper';
 requires 'JSON';
 requires 'Mojolicious::Plugin::Number::Commify';
 requires 'Moo';
