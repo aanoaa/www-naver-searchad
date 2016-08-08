@@ -12,6 +12,15 @@ require Exporter;
 
 our $BASE_URL = 'http://search.naver.com/search.naver';
 
+our @USER_AGENT = (
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.7 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.7',
+    'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0',
+    'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/31.0',
+    'Mozilla/5.0 (Windows NT 10.0; Trident/7.0; rv:11.0) like Gecko',
+    'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.04',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240'
+);
+
 ## error codes
 our $RANK_OK            = 200;
 our $RANK_UPDATED       = 201;
@@ -34,7 +43,9 @@ sub find_rank {
     return unless $find;
     return unless $keyword;
 
-    my $agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
+    srand();
+    my $rand            = int( rand( scalar @USER_AGENT ) );
+    my $agent           = $USER_AGENT[$rand];
     my $default_headers = {
         accept            => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language' => 'ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4',
@@ -69,13 +80,13 @@ sub find_rank {
     my $res = $http->get($url);
 
     unless ( $res->{success} ) {
-        $log->error("! Failed: $keyword");
+        $log->error("! Failed($res->{status}): $keyword");
         $log->error("! $res->{reason}");
         $log->error("! $socks") if $socks;
         return ( $res->{success}, 0 );
     }
 
-    $log->debug("OK: $keyword");
+    $log->debug("OK($res->{status}): $keyword");
     $log->debug("$socks") if $socks;
 
     my $content = gunzip( $res->{content} );
