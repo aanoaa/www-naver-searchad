@@ -5,7 +5,7 @@ use warnings;
 use Directory::Queue;
 use FindBin qw($Bin);
 use SearchAd::Schema;
-use WWW::Naver::SearchAd::Rank qw/enqueue $RANK_OK $RANK_ERR_FORBIDDEN/;
+use WWW::Naver::SearchAd::Rank qw/enqueue $RANK_OK/;
 
 STDOUT->autoflush(1);
 
@@ -27,6 +27,10 @@ while (1) {
 
     while ( my $r = $rs->next ) {
         my $success = enqueue( $dirq, $r );
+        unless ($success) { # forbidden
+            die '[' . localtime . '] ' . 'Got forbidden error, goodbye';
+        }
+
         if ( $success == $RANK_OK ) {
             my $adkeyword = $r->adkeyword;
             $schema->resultset('Bidlog')->create(
@@ -38,9 +42,6 @@ while (1) {
                     tobe         => $r->tobe,
                 }
             );
-        }
-        elsif ( $success == $RANK_ERR_FORBIDDEN ) {
-            die '[' . localtime . '] ' . 'Got forbidden error, goodbye';
         }
 
         my $rand = int( rand(10) ) + 20;
