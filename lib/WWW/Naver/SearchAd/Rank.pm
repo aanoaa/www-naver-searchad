@@ -4,11 +4,12 @@ use Encode qw/decode_utf8/;
 use Gzip::Faster qw/gunzip/;
 use HTTP::Tiny;
 use IO::Socket::Socks::Wrapper qw(wrap_connection);
+use JSON qw/decode_json/;
 use Mojo::Log;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(find_rank enqueue $RANK_OK $RANK_UPDATED $RANK_ERR_ARG $RANK_ERR_FORBIDDEN);
+@EXPORT_OK = qw(find_rank enqueue $RANK_OK $RANK_UPDATED $RANK_ERR_ARG $RANK_ERR_BIZMONEY $RANK_ERR_FORBIDDEN);
 
 our $BASE_URL = 'http://search.naver.com/search.naver';
 
@@ -25,6 +26,7 @@ our @USER_AGENT = (
 our $RANK_OK            = 200;
 our $RANK_UPDATED       = 201;
 our $RANK_ERR_ARG       = 101;
+our $RANK_ERR_BIZMONEY  = 102;
 our $RANK_ERR_FORBIDDEN = undef;
 
 my $log = Mojo::Log->new;
@@ -131,6 +133,24 @@ sub enqueue {
     $r->update( { rank => $rank } );
     return $RANK_ERR_FORBIDDEN unless $success;
     return $RANK_OK if $rank == $tobe;
+
+    unless ($rank) {
+        my $api = WWW::Naver::SearchAd->new(
+            customer_id => $user->customer_id,
+            key         => $user->api_key,
+            secret      => $user->api_secret
+        );
+
+        my $json = $api->bizmoney;
+        die "Failed to get a bizmoney" unless $json;
+
+        my $data = decode_json($json);
+        my $bizmoney = $data->{bizmoney} || 0;
+        if ( $bizmoney <= 0 ) {
+            $log->info("Not enough bizmoney: $bizmoney");
+            return $RANK_ERR_BIZMONEY;
+        }
+    }
 
     $rank = $adkeyword->max_depth + 1 unless $rank;
     $int *= -1 if $rank < $tobe;
