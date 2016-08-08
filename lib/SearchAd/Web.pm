@@ -69,6 +69,7 @@ sub _private_routes {
     my $r          = $root->under('/')->to('user#auth');
     my $adgroups   = $root->under('/adgroups')->to('user#auth');
     my $adkeywords = $root->under('/adkeywords')->to('user#auth');
+    my $sync       = $root->under('/sync')->to('user#auth');
 
     $r->get('/')->to('root#index');
     $r->get('/profile')->to('user#profile');
@@ -83,6 +84,9 @@ sub _private_routes {
     $adkeyword->put('/')->to('adkeyword#update_adkeyword');
 
     $r->put('/ranks/:rank_id')->to('rank#update_rank');
+
+    $sync->get('/groups')->to('sync#groups');
+    $sync->get('/keywords')->to('sync#keywords');
 }
 
 sub _extend_validator {

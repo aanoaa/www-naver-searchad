@@ -2,6 +2,12 @@
 % title 'index';
 
 <h2>
+  <span class="pull-right">
+    <button class="btn btn-success btn-sync" data-url="<%= url_for('/adgroups/') %>">
+      <i class="fa fa-refresh" aria-hidden="true"></i>
+      Group synchronization
+    </button>
+  </span>
   %= $user->username
   <small>
     %= $user->email
