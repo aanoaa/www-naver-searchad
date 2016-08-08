@@ -174,6 +174,28 @@ sub managedKeyword {
     return $res->{content};
 }
 
+=head2 bizmoney
+
+    GET /billing/bizmoney
+    my $json = $api->bizmoney;
+
+    {
+        "bizmoney": long,
+        "budgetLock": boolean,
+        "customerId": long,
+        "refundLock": boolean
+    }
+
+=cut
+
+sub bizmoney {
+    my $self = shift;
+
+    my $res = $self->request( 'GET', '/billing/bizmoney' );
+    return unless $res;
+    return $res->{content};
+}
+
 =head2 custom_headers
 
 =cut
