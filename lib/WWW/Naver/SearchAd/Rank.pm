@@ -6,6 +6,7 @@ use HTTP::Tiny;
 use IO::Socket::Socks::Wrapper qw(wrap_connection);
 use JSON qw/decode_json/;
 use Mojo::Log;
+use WWW::Naver::SearchAd;
 
 require Exporter;
 @ISA       = qw(Exporter);
